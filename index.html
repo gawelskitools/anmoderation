@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Anmoderation zu XML</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; max-width: 960px; margin: auto; }
+        textarea { width: 100%; height: 200px; margin-top: 5px; font-family: monospace; }
+        .button-group { display: flex; flex-wrap: wrap; gap: 10px; margin: 20px 0; }
+        button { padding: 10px 15px; font-size: 16px; cursor: pointer; }
+        label span { font-weight: normal; font-size: 14px; margin-left: 10px; color: #555; }
+    </style>
+</head>
+<body>
+    <h1>Anmoderation zu XML (Strukturanalyse + Auswertungsschritte)</h1>
+    <label for="anmoderation">Anmoderation <span id="charCount">0 Zeichen</span></label>
+    <textarea id="anmoderation" placeholder="Geben Sie hier den Originaltext der Anmoderation ein..."></textarea>
+
+    <div class="button-group">
+        <button onclick="generateXML()">XML für die KI generieren</button>
+        <button onclick="copyToClipboard()">XML für KI in die Zwischenablage speichern</button>
+        <button onclick="downloadXML()">XML herunterladen</button>
+    </div>
+
+    <label for="xmlOutput">Generiertes XML (editierbar)</label>
+    <textarea id="xmlOutput" placeholder="Hier erscheint das generierte XML..."></textarea>
+
+    <script>
+        const anmoInput = document.getElementById('anmoderation');
+        const xmlOutput = document.getElementById('xmlOutput');
+        const charCount = document.getElementById('charCount');
+
+        anmoInput.addEventListener('input', () => {
+            charCount.textContent = anmoInput.value.length + ' Zeichen';
+        });
+
+        function generateXML() {
+            const text = anmoInput.value.trim();
+            const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<anmoderation-analyse version="1.0">\n
+  <anweisung-fuer-ki><![CDATA[
+    Bitte analysiere nur den Originaltext. Gib mir direkt die Ergebnisse aus Schritt 2 bis 5 aus:
+    
+    - Schritt 2: Kurzbeschreibung (max. 150 Zeichen, journalistisch)
+    - Schritt 3: Überschrift (max. 60 Zeichen, SEO-tauglich)
+    - Schritt 4: SEO-Keywords (10 Begriffe, kommagetrennt, ohne Dopplung mit Themen)
+    - Schritt 5: SEO-Themen (5 Begriffe, kommagetrennt, ohne Dopplung mit Keywords)
+
+    Verwende nur belegbare Informationen aus dem Text. Keine erfundenen Inhalte. Keine XML-Ausgabe. Nur Klartext-Ausgabe. 
+  ]]></anweisung-fuer-ki>\n
+  <quelle>\n    <textart>TV-Anmoderation</textart>\n    <originaltext><![CDATA[\n${text}\n    ]]></originaltext>\n  </quelle>\n
+  <struktur>\n
+    <hook>\n      <form><![CDATA[\n        <!-- Thematischer Einstieg: z. B. emotional, provokant, pointiert -->\n      ]]></form>\n      <wirkung><![CDATA[\n        <!-- Welche Wirkung soll erzielt werden? (Neugier, Schock, Spannung...) -->\n      ]]></wirkung>\n    </hook>\n
+    <kerninhalt>\n      <was><![CDATA[\n        <!-- Was ist passiert? -->\n      ]]></was>\n      <wo><![CDATA[\n        <!-- Wo? -->\n      ]]></wo>\n      <wann><![CDATA[\n        <!-- Wann? -->\n      ]]></wann>\n      <wem><![CDATA[\n        <!-- Wem ist es passiert / Wer ist betroffen? -->\n      ]]></wem>\n      <hintergrund><![CDATA[\n        <!-- Hintergrund / Kontext des Ereignisses -->\n      ]]></hintergrund>\n    </kerninhalt>\n
+    <akteure>\n      <beteiligte><![CDATA[\n        <!-- Wer kommt vor? Wer handelt oder ist betroffen? -->\n      ]]></beteiligte>\n    </akteure>\n
+    <zielrichtung>\n      <inhaltlichesZiel><![CDATA[\n        <!-- Was will der Beitrag erreichen? -->\n      ]]></inhaltlichesZiel>\n      <zeitbezug>\n        <moeglich>Gegenwart</moeglich>\n        <moeglich>Zukunft</moeglich>\n        <moeglich>Vergangenheit</moeglich>\n      </zeitbezug>\n    </zielrichtung>\n
+    <tonlage>\n      <stil>\n        <moeglich>sachlich</moeglich>\n        <moeglich>emotional</moeglich>\n        <moeglich>dramatisch</moeglich>\n        <moeglich>erklärend</moeglich>\n        <moeglich>neutral</moeglich>\n      </stil>\n      <beschreibung><![CDATA[\n        <!-- Textmerkmale, die Tonfall und Erzählweise belegen -->\n      ]]></beschreibung>\n    </tonlage>\n
+  </struktur>\n
+  <auswertung>\n    <schritt2>\n      <teasertext><![CDATA[\n        <!-- Ein Satz, journalistisch, max. 150 Zeichen -->\n      ]]></teasertext>\n    </schritt2>\n
+    <schritt3>\n      <ueberschrift><![CDATA[\n        <!-- Aussagekräftige Überschrift, max. 60 Zeichen -->\n      ]]></ueberschrift>\n    </schritt3>\n
+    <schritt4>\n      <seo_keywords><![CDATA[\n        <!-- Kommagetrennte Keywords: Begriff1, Begriff2, ... -->\n      ]]></seo_keywords>\n    </schritt4>\n
+    <schritt5>\n      <seo_themen><![CDATA[\n        <!-- Kommagetrennte Themen: Thema1, Thema2, ... -->\n      ]]></seo_themen>\n    </schritt5>\n  </auswertung>\n
+</anmoderation-analyse>`;
+
+            xmlOutput.value = xml;
+        }
+
+        function copyToClipboard() {
+            xmlOutput.select();
+            document.execCommand('copy');
+        }
+
+        function downloadXML() {
+            const blob = new Blob([xmlOutput.value], { type: 'application/xml' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'anmoderation-analyse.xml';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>
