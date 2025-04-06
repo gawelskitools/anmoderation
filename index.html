@@ -12,7 +12,8 @@
     </style>
 </head>
 <body>
-    <h1>Transkript zu XML2 (Strukturanalyse + Auswertungsschritte)</h1>
+    <h1>Transkript zu XML (Strukturanalyse + Auswertungsschritte)</h1>
+    
     <label for="transkript">Transkript <span id="charCount">0 Zeichen</span></label>
     <textarea id="transkript" placeholder="Geben Sie hier den Originaltext des Transkriptes ein..."></textarea>
 
@@ -30,13 +31,15 @@
         const xmlOutput = document.getElementById('xmlOutput');
         const charCount = document.getElementById('charCount');
 
+        // Zeichenanzahl live anzeigen
         transkriptInput.addEventListener('input', () => {
             charCount.textContent = transkriptInput.value.length + ' Zeichen';
         });
 
+        // XML-Generierung
         function generateXML() {
-  const text = transkriptInput.value.trim();
-  const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<transkript-analyse version="1.0">\n
+            const text = transkriptInput.value.trim();
+            const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<transkript-analyse version="1.0">\n
   <anweisung-fuer-ki><![CDATA[
     Bitte analysiere das folgende Transkript eines TV-Beitrags. Gib mir direkt die Ergebnisse aus Schritt 2 bis 5 aus:
 
@@ -61,15 +64,16 @@
     <schritt5>\n      <beteiligte_personen><![CDATA[\n        <!-- Wer kommt vor? (mit Rolle/Funktion) -->\n      ]]></beteiligte_personen>\n    </schritt5>\n
   </auswertung>\n
 </transkript-analyse>`;
-
-  XMLOutput.value = xml;
+            xmlOutput.value = xml;
         }
 
+        // In Zwischenablage kopieren
         function copyToClipboard() {
             xmlOutput.select();
             document.execCommand('copy');
         }
 
+        // Als Datei herunterladen
         function downloadXML() {
             const blob = new Blob([xmlOutput.value], { type: 'application/xml' });
             const url = URL.createObjectURL(blob);
