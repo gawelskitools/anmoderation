@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <title>Analyse-Tool mit Vorschau-Ausgabe (HTML + Text)</title>
+  <meta charset="UTF-8" />
+  <title>Analyse-Tool mit Klartext- und HTML-Vorschau</title>
   <style>
     body { font-family: Arial, sans-serif; max-width: 960px; margin: auto; padding: 20px; }
     textarea, select, input[type="text"] {
@@ -15,13 +15,13 @@
   </style>
 </head>
 <body>
-  <h1>Analyse-Tool mit strukturierter Vorschau-Ausgabe 004</h1>
+  <h1>Analyse-Tool – Vorschau als Text und HTML 006</h1>
 
   <label for="beitragstitel">Beitragstitel:</label>
-  <input type="text" id="beitragstitel" placeholder="z. B. Sanierung des Großherzoglichen Palais" />
+  <input type="text" id="beitragstitel" value="Beitragstitel eingeben" />
 
   <label for="slugId">Slug-ID:</label>
-  <input type="text" id="slugId" placeholder="z. B. sanierung-grossherzogliches-palais-neustrelitz" />
+  <input type="text" id="slugId" value="Bitte Video-ID eingeben" />
 
   <label for="ressort">Ressort:</label>
   <select id="ressort">
@@ -43,8 +43,8 @@
     <option>Ausland</option>
   </select>
 
-  <label for="tags">Tags (kommagetrennt):</label>
-  <input type="text" id="tags" placeholder="z. B. Sanierung, Denkmal, Hotel" />
+  <label for="tags">Tags:</label>
+  <input type="text" id="tags" value="Bitte wertvolle Tags kommagetrennt eingeben, die Gewichtung in der Analyse bekommen sollen" />
 
   <div class="analyse-block">
     <h2>Transkript</h2>
@@ -52,8 +52,8 @@
     <textarea id="transkript" placeholder="Transkript eingeben..."></textarea>
     <label>Zitate erlaubt?</label>
     <select id="zitateTranskript">
-      <option value="true" selected>Ja</option>
-      <option value="false">Nein</option>
+      <option value="true" >Ja</option>
+      <option value="false" selected>Nein</option>
     </select>
     <label>Gewichtung:</label>
     <select id="weightTranskript">
@@ -71,8 +71,8 @@
     <textarea id="anmoderation" placeholder="Anmoderation eingeben..."></textarea>
     <label>Zitate erlaubt?</label>
     <select id="zitateAnmoderation">
-      <option value="true" selected>Ja</option>
-      <option value="false">Nein</option>
+      <option value="true" >Ja</option>
+      <option value="false" selected>Nein</option>
     </select>
     <label>Gewichtung:</label>
     <select id="weightAnmoderation">
@@ -99,30 +99,26 @@
                 .replace(/'/g, "&apos;");
     }
 
-    function generateTimestamp() {
-      const now = new Date();
-      const iso = now.toISOString();
-      const readable = now.toLocaleDateString("de-DE") + ", " + now.toLocaleTimeString("de-DE");
-      return { iso, readable };
-    }
-
     function generateFinalXML() {
-      const { iso, readable } = generateTimestamp();
-      const titel = escapeXml(document.getElementById("beitragstitel").value.trim());
-      const slugId = escapeXml(document.getElementById("slugId").value.trim());
+      const now = new Date();
+      const timestamp = now.toLocaleDateString("de-DE") + ", " + now.toLocaleTimeString("de-DE");
+      const isoTime = now.toISOString();
+
+      const titel = escapeXml(document.getElementById("beitragstitel").value);
+      const slug = escapeXml(document.getElementById("slugId").value);
       const ressort = escapeXml(document.getElementById("ressort").value);
-      const tags = escapeXml(document.getElementById("tags").value.trim());
-      const transkript = escapeXml(document.getElementById("transkript").value.trim());
-      const zitateT = document.getElementById("zitateTranskript").value;
+      const tags = escapeXml(document.getElementById("tags").value);
+      const transcript = escapeXml(document.getElementById("transkript").value);
+      const zitatT = document.getElementById("zitateTranskript").value;
       const weightT = document.getElementById("weightTranskript").value;
-      const anmoderation = escapeXml(document.getElementById("anmoderation").value.trim());
-      const zitateA = document.getElementById("zitateAnmoderation").value;
+      const anmoderation = escapeXml(document.getElementById("anmoderation").value);
+      const zitatA = document.getElementById("zitateAnmoderation").value;
       const weightA = document.getElementById("weightAnmoderation").value;
 
       const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <online-ausgabe version="1.0">
   <anweisung-fuer-ki>
-    <beschreibung>Analysiere dieses Dokument vollständig und befülle alle leeren Felder gemäß der untenstehenden Aufgabenstellung.</beschreibung>
+    <beschreibung>Analysiere dieses Dokument vollständig und befülle alle leeren Felder gemäß der Aufgabenstellung.</beschreibung>
     <aufgaben>
       <aufgabe>
         <ziel>Analyse der Inhalte</ziel>
@@ -130,8 +126,8 @@
           <schritt nummer="2">Zentrale Fakten herausfiltern</schritt>
           <schritt nummer="3">Zentrales Thema formulieren</schritt>
           <schritt nummer="4">Informative Absicht erkennen</schritt>
-          <schritt nummer="5">Beteiligte Personen oder Institutionen benennen</schritt>
-          <schritt nummer="6">Prognose zum Beitrag erstellen (falls möglich)</schritt>
+          <schritt nummer="5">Beteiligte Personen benennen</schritt>
+          <schritt nummer="6">Prognose erstellen</schritt>
         </schritte>
         <gilt-fuer>
           <quelle>Transkript</quelle>
@@ -141,37 +137,30 @@
       <aufgabe>
         <ziel>Erstellung redaktioneller Online-Elemente</ziel>
         <elemente>
-          <ueberschrift max-laenge="60">Überschrift in aktiver Sprache mit klaren Keywords</ueberschrift>
-          <kurzbeschreibung max-laenge="150">Faktenbasierte Kurzbeschreibung mit klarer Aussage, kein Fließtext</kurzbeschreibung>
-          <keywords max="10">Thematisch präzise, max. 3 Wörter je Begriff</keywords>
-          <themen max="5">Breit gefasste, übergeordnete Themenbereiche</themen>
+          <ueberschrift max-laenge="60" />
+          <kurzbeschreibung max-laenge="150" />
+          <keywords max="10" />
+          <themen max="5" />
         </elemente>
       </aufgabe>
       <aufgabe>
-        <ziel>Ausgabeformat</ziel>
+        <ziel>Vorschauausgabe</ziel>
         <formate>
-          <format typ="xml">Alle Ergebnisse direkt in die entsprechenden XML-Knoten einfügen</format>
-          <format typ="vorschau">
-            Gib die Ergebnisse doppelt aus:
-            <form text="klar gegliedert mit Zwischenüberschriften" />
-            <form html="strukturierte Darstellung in Boxen, lesefreundlich" />
-          </format>
+          <format typ="text">Gegliedert mit Zwischenüberschriften</format>
+          <format typ="html">Boxenstruktur für Webausgabe</format>
         </formate>
       </aufgabe>
     </aufgaben>
     <hinweise>
       <hinweis>Keine CDATA verwenden</hinweis>
-      <hinweis>Halte dich exakt an die Längenangaben in den Attributen</hinweis>
-      <hinweis>Struktur und Reihenfolge der Felder nicht verändern</hinweis>
-      <hinweis>Alle Inhalte direkt in die jeweiligen XML-Knoten schreiben</hinweis>
-      <hinweis>Keine Bestätigung oder Rückfrage am Anfang oder Ende</hinweis>
+      <hinweis>Ergebnisse direkt in XML einfügen</hinweis>
     </hinweise>
   </anweisung-fuer-ki>
 
   <quelle>
-    <id>beitrag-${readable}</id>
-    <zeitstempel>${iso}</zeitstempel>
-    <slug-id>${slugId}</slug-id>
+    <id>beitrag-${timestamp}</id>
+    <zeitstempel>${isoTime}</zeitstempel>
+    <slug-id>${slug}</slug-id>
     <art>TV-Beitrag</art>
     <titel>${titel}</titel>
     <themenvorgabe>
@@ -180,8 +169,8 @@
     </themenvorgabe>
     <analysearten>
       <transkript gewichtung="${weightT}">
-        <zitate-erlaubt>${zitateT}</zitate-erlaubt>
-        <originaltext>${transkript}</originaltext>
+        <zitate-erlaubt>${zitatT}</zitate-erlaubt>
+        <originaltext>${transcript}</originaltext>
         <analyse>
           <schritt nummer="2"></schritt>
           <schritt nummer="3"></schritt>
@@ -191,7 +180,7 @@
         </analyse>
       </transkript>
       <anmoderation gewichtung="${weightA}">
-        <zitate-erlaubt>${zitateA}</zitate-erlaubt>
+        <zitate-erlaubt>${zitatA}</zitate-erlaubt>
         <originaltext>${anmoderation}</originaltext>
         <analyse>
           <schritt nummer="2"></schritt>
@@ -210,32 +199,20 @@
     <seo>
       <keywords max="10">
         <keyword></keyword>
-        <keyword></keyword>
-        <keyword></keyword>
-        <keyword></keyword>
-        <keyword></keyword>
-        <keyword></keyword>
-        <keyword></keyword>
-        <keyword></keyword>
-        <keyword></keyword>
-        <keyword></keyword>
       </keywords>
       <themen max="5">
-        <thema typ=""></thema>
-        <thema typ=""></thema>
-        <thema typ=""></thema>
-        <thema typ=""></thema>
-        <thema typ=""></thema>
+        <thema></thema>
       </themen>
     </seo>
   </editorial-metadata>
 
   <vorschau>
     <text>
-      <ueberschrift></ueberschrift>
-      <kurzbeschreibung></kurzbeschreibung>
-      <keywords></keywords>
-      <themen></themen>
+      <abschnitt titel="Finale redaktionelle Online-Ausgabe" />
+      <abschnitt titel="Überschrift (max. 60 Zeichen)"></abschnitt>
+      <abschnitt titel="Kurzbeschreibung (max. 150 Zeichen)"></abschnitt>
+      <abschnitt titel="SEO-Keywords (max. 10)"></abschnitt>
+      <abschnitt titel="SEO-Themen (max. 5)"></abschnitt>
     </text>
     <html>
       <block typ="ueberschrift"></block>
