@@ -1,88 +1,159 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <title>Transkript zu XML2</title>
-    <style>
-        body { font-family: Arial, sans-serif; padding: 20px; max-width: 960px; margin: auto; }
-        textarea { width: 100%; height: 200px; margin-top: 5px; font-family: monospace; }
-        .button-group { display: flex; flex-wrap: wrap; gap: 10px; margin: 20px 0; }
-        button { padding: 10px 15px; font-size: 16px; cursor: pointer; }
-        label span { font-weight: normal; font-size: 14px; margin-left: 10px; color: #555; }
-    </style>
+  <meta charset="UTF-8">
+  <title>Transkript zu XML – Strukturierte Analyse</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      max-width: 960px;
+      margin: auto;
+    }
+    textarea {
+      width: 100%;
+      height: 200px;
+      margin-top: 5px;
+      font-family: monospace;
+    }
+    .button-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 20px 0;
+    }
+    button {
+      padding: 10px 15px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    label span {
+      font-weight: normal;
+      font-size: 14px;
+      margin-left: 10px;
+      color: #555;
+    }
+  </style>
 </head>
 <body>
-    <h1>Transkript zu XML (Strukturanalyse + Auswertungsschritte)</h1>
-    
-    <label for="transkript">Transkript <span id="charCount">0 Zeichen</span></label>
-    <textarea id="transkript" placeholder="Geben Sie hier den Originaltext des Transkriptes ein..."></textarea>
+  <h1>Transkript zu XML (Strukturanalyse + Auswertungsschritte)</h1>
 
-    <div class="button-group">
-        <button onclick="generateXML()">XML für die KI generieren</button>
-        <button onclick="copyToClipboard()">XML für KI in die Zwischenablage speichern</button>
-        <button onclick="downloadXML()">XML herunterladen</button>
-    </div>
+  <label for="transkript">Transkript <span id="charCount">0 Zeichen</span></label>
+  <textarea id="transkript" placeholder="Geben Sie hier den Originaltext des Transkripts ein..."></textarea>
 
-    <label for="xmlOutput">Generiertes XML (editierbar)</label>
-    <textarea id="xmlOutput" placeholder="Hier erscheint das generierte XML..."></textarea>
+  <div class="button-group">
+    <button onclick="generateXML()">XML generieren</button>
+    <button onclick="copyToClipboard()">In Zwischenablage kopieren</button>
+    <button onclick="downloadXML()">XML herunterladen</button>
+  </div>
 
-    <script>
-        const transkriptInput = document.getElementById('transkript');
-        const xmlOutput = document.getElementById('xmlOutput');
-        const charCount = document.getElementById('charCount');
+  <label for="xmlOutput">Generiertes XML (editierbar)</label>
+  <textarea id="xmlOutput" placeholder="Hier erscheint das generierte XML..."></textarea>
 
-        // Zeichenanzahl live anzeigen
-        transkriptInput.addEventListener('input', () => {
-            charCount.textContent = transkriptInput.value.length + ' Zeichen';
-        });
+  <script>
+    const transkriptInput = document.getElementById('transkript');
+    const xmlOutput = document.getElementById('xmlOutput');
+    const charCount = document.getElementById('charCount');
 
-        // XML-Generierung
-        function generateXML() {
-            const text = transkriptInput.value.trim();
-            const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<transkript-analyse version="1.0">\n
-  <anweisung-fuer-ki><![CDATA[
-    Bitte analysiere das folgende Transkript eines TV-Beitrags. Gib mir direkt die Ergebnisse aus Schritt 2 bis 5 aus:
+    // Zeichenanzahl aktualisieren
+    transkriptInput.addEventListener('input', () => {
+      charCount.textContent = transkriptInput.value.length + ' Zeichen';
+    });
 
-    - Schritt 2: Zentrale Fakten (kompakt in Stichpunkten, objektiv und belegbar)
-    - Schritt 3: Zentrales Thema (in einem Satz, kein Zitat, keine wörtliche Rede)
-    - Schritt 4: Informative Absicht (journalistische Zielsetzung des Beitrags, sachlich formuliert)
-    - Schritt 5: Beteiligte Personen oder Institutionen (Rollen, Funktionen, Namen – soweit im Text genannt)
+    function generateXML() {
+      const text = transkriptInput.value.trim();
+      const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<transkript-analyse version="1.0">
+  <anweisung>
+    <beschreibung>Analyse des folgenden Transkripts eines TV-Beitrags</beschreibung>
+    <auswertungsanleitung>
+      <schritt nummer="2">
+        <ziel>Zentrale Fakten</ziel>
+        <form>kompakt in Stichpunkten, objektiv und belegbar</form>
+      </schritt>
+      <schritt nummer="3">
+        <ziel>Zentrales Thema</ziel>
+        <form>in einem Satz, kein Zitat, keine wörtliche Rede</form>
+      </schritt>
+      <schritt nummer="4">
+        <ziel>Informative Absicht</ziel>
+        <form>journalistische Zielsetzung des Beitrags, sachlich formuliert</form>
+      </schritt>
+      <schritt nummer="5">
+        <ziel>Beteiligte Personen oder Institutionen</ziel>
+        <form>Rollen, Funktionen, Namen – soweit im Text genannt</form>
+      </schritt>
+    </auswertungsanleitung>
+    <hinweise>
+      <hinweis>Nur belegbare Informationen aus dem Text verwenden</hinweis>
+      <hinweis>Keine erfundenen Inhalte</hinweis>
+      <hinweis>Nur Klartext-Ausgabe, keine XML-Ausgabe</hinweis>
+    </hinweise>
+  </anweisung>
 
-    Verwende nur belegbare Informationen aus dem Text. Keine erfundenen Inhalte. Keine XML-Ausgabe. Nur Klartext-Ausgabe.
-  ]]></anweisung-fuer-ki>\n
-  <quelle>\n    <textart>TV-Transkript</textart>\n    <originaltext><![CDATA[\n${text}\n    ]]></originaltext>\n  </quelle>\n
-  <struktur>\n
-    <gliederung>\n      <abschnitt1><![CDATA[Einleitung / Anmoderation]]></abschnitt1>\n      <abschnitt2><![CDATA[Hauptteil mit O-Tönen / Berichten]]></abschnitt2>\n      <abschnitt3><![CDATA[Ausblick / Fazit / Schlussbild]]></abschnitt3>\n    </gliederung>\n
-    <zeitbezug>\n      <zeitpunkt><![CDATA[Vergangenheit, Gegenwart, Zukunft (je nach Inhalt markieren)]]></zeitpunkt>\n    </zeitbezug>\n
-    <raumbereich>\n      <ort><![CDATA[Ort(e) der Handlung / des Beitrags – wenn vorhanden]]></ort>\n    </raumbereich>\n
-    <themenschwerpunkt>\n      <beschreibung><![CDATA[Hauptthema des Beitrags, übergeordnetes Themafeld]]></beschreibung>\n    </themenschwerpunkt>\n
-  </struktur>\n
-  <auswertung>\n
-    <schritt2>\n      <zentrale_fakten><![CDATA[\n        <!-- Objektive Kerninformationen in Stichpunkten -->\n      ]]></zentrale_fakten>\n    </schritt2>\n
-    <schritt3>\n      <zentrales_thema><![CDATA[\n        <!-- Thema in einem prägnanten Satz -->\n      ]]></zentrales_thema>\n    </schritt3>\n
-    <schritt4>\n      <informative_absicht><![CDATA[\n        <!-- Was will der Beitrag vermitteln oder erreichen? -->\n      ]]></informative_absicht>\n    </schritt4>\n
-    <schritt5>\n      <beteiligte_personen><![CDATA[\n        <!-- Wer kommt vor? (mit Rolle/Funktion) -->\n      ]]></beteiligte_personen>\n    </schritt5>\n
-  </auswertung>\n
+  <quelle>
+    <textart>TV-Transkript</textart>
+    <originaltext>${escapeXml(text)}</originaltext>
+  </quelle>
+
+  <struktur>
+    <gliederung>
+      <einleitung>Einleitung / Anmoderation</einleitung>
+      <hauptteil>Hauptteil mit O-Tönen / Berichten</hauptteil>
+      <schluss>Ausblick / Fazit / Schlussbild</schluss>
+    </gliederung>
+    <zeitbezug>
+      <zeitpunkt>Vergangenheit, Gegenwart, Zukunft (je nach Inhalt markieren)</zeitpunkt>
+    </zeitbezug>
+    <raumbereich>
+      <ort>Ort(e) der Handlung / des Beitrags – wenn vorhanden</ort>
+    </raumbereich>
+    <themenschwerpunkt>
+      <beschreibung>Hauptthema des Beitrags, übergeordnetes Themafeld</beschreibung>
+    </themenschwerpunkt>
+  </struktur>
+
+  <auswertung>
+    <schritt nummer="2">
+      <zentrale-fakten></zentrale-fakten>
+    </schritt>
+    <schritt nummer="3">
+      <zentrales-thema></zentrales-thema>
+    </schritt>
+    <schritt nummer="4">
+      <informative-absicht></informative-absicht>
+    </schritt>
+    <schritt nummer="5">
+      <beteiligte-personen></beteiligte-personen>
+    </schritt>
+  </auswertung>
 </transkript-analyse>`;
-            xmlOutput.value = xml;
-        }
 
-        // In Zwischenablage kopieren
-        function copyToClipboard() {
-            xmlOutput.select();
-            document.execCommand('copy');
-        }
+      xmlOutput.value = xml;
+    }
 
-        // Als Datei herunterladen
-        function downloadXML() {
-            const blob = new Blob([xmlOutput.value], { type: 'application/xml' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'transkript-analyse.xml';
-            a.click();
-            URL.revokeObjectURL(url);
-        }
-    </script>
+    function escapeXml(unsafe) {
+      return unsafe
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&apos;");
+    }
+
+    function copyToClipboard() {
+      xmlOutput.select();
+      document.execCommand("copy");
+    }
+
+    function downloadXML() {
+      const blob = new Blob([xmlOutput.value], { type: "application/xml" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "transkript-analyse.xml";
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+  </script>
 </body>
 </html>
