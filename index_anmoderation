@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Anmoderation zu XML</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; max-width: 960px; margin: auto; }
+        textarea { width: 100%; height: 200px; margin-top: 5px; font-family: monospace; }
+        .button-group { display: flex; flex-wrap: wrap; gap: 10px; margin: 20px 0; }
+        button { padding: 10px 15px; font-size: 16px; cursor: pointer; }
+        label span { font-weight: normal; font-size: 14px; margin-left: 10px; color: #555; }
+    </style>
+</head>
+<body>
+    <h1>Anmoderation zu XML (Strukturanalyse + Auswertungsschritte)</h1>
+    <label for="anmoderation">Anmoderation <span id="charCount">0 Zeichen</span></label>
+    <textarea id="anmoderation" placeholder="Geben Sie hier den Originaltext der Anmoderation ein..."></textarea>
+
+    <div class="button-group">
+        <button onclick="generateXML()">XML für die KI generieren</button>
+        <button onclick="copyToClipboard()">XML für KI in die Zwischenablage speichern</button>
+        <button onclick="downloadXML()">XML herunterladen</button>
+    </div>
+
+    <label for="xmlOutput">Generiertes XML (editierbar)</label>
+    <textarea id="xmlOutput" placeholder="Hier erscheint das generierte XML..."></textarea>
+
+    <script>
+        const anmoInput = document.getElementById('anmoderation');
+        const xmlOutput = document.getElementById('xmlOutput');
+        const charCount = document.getElementById('charCount');
+
+        anmoInput.addEventListener('input', () => {
+            charCount.textContent = anmoInput.value.length + ' Zeichen';
+        });
+
+        function generateXML() {
+  const text = anmoInput.value.trim();
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<anmoderation-analyse version="1.0">\n
+  <anweisung-fuer-ki><![CDATA[
+    Bitte analysiere nur den Originaltext. Gib mir die folgenden Punkte strukturiert aus:
+
+    - Schritt 2: Sprachliche & inhaltliche Analyse (Zeit, Ort, Personen, Handlung, Kontext, Stil)
+    - Schritt 3: Zentrale Fakten (konkrete Informationen in Stichpunkten)
+    - Schritt 4: Zentrales Thema (kurz, allgemein gefasst)
+    - Schritt 5: Informative Absicht (Was will der Beitrag erreichen?)
+    - Schritt 6: Prognose – Worum könnte es im Beitrag gehen?
+
+    Gib die Ergebnisse jeweils mit Abschnittsüberschriften aus. Keine erfundenen Inhalte, nur belegbares aus dem Text. Keine XML-Ausgabe – nur Klartext.
+  ]]></anweisung-fuer-ki>\n
+  <quelle>\n    <textart>TV-Anmoderation</textart>\n    <originaltext><![CDATA[\n${text}\n    ]]></originaltext>\n  </quelle>\n
+  <struktur>\n
+    <analyse>\n
+      <sprachlich-inhaltlich><![CDATA[\n        <!-- Schritt 2: Zeit, Ort, Personen, Handlung, Kontext, Stil -->\n      ]]></sprachlich-inhaltlich>\n
+      <zentrale-fakten><![CDATA[\n        <!-- Schritt 3: Alle belegbaren Informationen in Stichpunkten -->\n      ]]></zentrale-fakten>\n
+      <zentrales-thema><![CDATA[\n        <!-- Schritt 4: Übergeordnetes Thema in einem Satz -->\n      ]]></zentrales-thema>\n
+      <intention-des-beitrags><![CDATA[\n        <!-- Schritt 5: Welche Absicht verfolgt der Beitrag? -->\n      ]]></intention-des-beitrags>\n
+      <vermuteter-inhalt><![CDATA[\n        <!-- Schritt 6: Worum könnte es im Beitrag konkret gehen? -->\n      ]]></vermuteter-inhalt>\n
+    </analyse>\n
+  </struktur>\n
+</anmoderation-analyse>`;
+
+  xmlOutput.value = xml;
+        }
+
+        function copyToClipboard() {
+            xmlOutput.select();
+            document.execCommand('copy');
+        }
+
+        function downloadXML() {
+            const blob = new Blob([xmlOutput.value], { type: 'application/xml' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'anmoderation-analyse.xml';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>
