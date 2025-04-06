@@ -1,31 +1,35 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <title>Transkript zu XML – Strukturierte Analyse</title>
+  <meta charset="UTF-8" />
+  <title>Modulares Analyse-Tool – Transkript & Anmoderation</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      padding: 20px;
       max-width: 960px;
       margin: auto;
+      padding: 20px;
     }
     textarea {
       width: 100%;
-      height: 200px;
-      margin-top: 5px;
+      height: 180px;
       font-family: monospace;
+      margin-top: 5px;
+    }
+    .analyse-block {
+      margin-bottom: 30px;
+      border-top: 1px solid #ccc;
+      padding-top: 20px;
     }
     .button-group {
+      margin-top: 10px;
       display: flex;
-      flex-wrap: wrap;
       gap: 10px;
-      margin: 20px 0;
+      flex-wrap: wrap;
     }
-    button {
-      padding: 10px 15px;
-      font-size: 16px;
-      cursor: pointer;
+    select {
+      margin-top: 10px;
+      font-size: 14px;
     }
     label span {
       font-weight: normal;
@@ -36,99 +40,73 @@
   </style>
 </head>
 <body>
-  <h1>Transkript zu XML (Strukturanalyse + Auswertungsschritte)</h1>
+  <h1>Modulares Analyse-Tool für TV-Beiträge</h1>
 
-  <label for="transkript">Transkript <span id="charCount">0 Zeichen</span></label>
-  <textarea id="transkript" placeholder="Geben Sie hier den Originaltext des Transkripts ein..."></textarea>
+  <!-- TRANSKRIPT -->
+  <div class="analyse-block">
+    <h2>1. Transkript</h2>
+    <label for="transkript">Text <span id="charCountTranskript">0 Zeichen</span></label>
+    <textarea id="transkript" placeholder="Geben Sie hier das Transkript ein..."></textarea>
 
-  <div class="button-group">
-    <button onclick="generateXML()">XML generieren</button>
-    <button onclick="copyToClipboard()">In Zwischenablage kopieren</button>
-    <button onclick="downloadXML()">XML herunterladen</button>
+    <label for="weightTranskript">Gewichtung:</label>
+    <select id="weightTranskript">
+      <option value="0">0 %</option>
+      <option value="25">25 %</option>
+      <option value="50" selected>50 %</option>
+      <option value="75">75 %</option>
+      <option value="100">100 %</option>
+    </select>
+
+    <div class="button-group">
+      <button onclick="updateCharCount('transkript')">Analyse generieren</button>
+    </div>
   </div>
 
-  <label for="xmlOutput">Generiertes XML (editierbar)</label>
-  <textarea id="xmlOutput" placeholder="Hier erscheint das generierte XML..."></textarea>
+  <!-- ANMODERATION -->
+  <div class="analyse-block">
+    <h2>2. Anmoderation</h2>
+    <label for="anmoderation">Text <span id="charCountAnmoderation">0 Zeichen</span></label>
+    <textarea id="anmoderation" placeholder="Geben Sie hier die Anmoderation ein..."></textarea>
+
+    <label for="weightAnmoderation">Gewichtung:</label>
+    <select id="weightAnmoderation">
+      <option value="0">0 %</option>
+      <option value="25">25 %</option>
+      <option value="50" selected>50 %</option>
+      <option value="75">75 %</option>
+      <option value="100">100 %</option>
+    </select>
+
+    <div class="button-group">
+      <button onclick="updateCharCount('anmoderation')">Analyse generieren</button>
+    </div>
+  </div>
+
+  <!-- FINALE XML AUSGABE -->
+  <h2>3. Finale XML-Ausgabe</h2>
+  <textarea id="finalXml" placeholder="Hier erscheint die finale XML-Ausgabe..."></textarea>
+  <div class="button-group">
+    <button onclick="copyToClipboard()">In Zwischenablage kopieren</button>
+    <button onclick="downloadXML()">XML herunterladen</button>
+    <button onclick="generateFinalXML()">Finales XML erstellen</button>
+  </div>
 
   <script>
-    const transkriptInput = document.getElementById('transkript');
-    const xmlOutput = document.getElementById('xmlOutput');
-    const charCount = document.getElementById('charCount');
+    const transkriptInput = document.getElementById("transkript");
+    const anmoderationInput = document.getElementById("anmoderation");
+    const finalXmlOutput = document.getElementById("finalXml");
 
-    // Zeichenanzahl aktualisieren
-    transkriptInput.addEventListener('input', () => {
-      charCount.textContent = transkriptInput.value.length + ' Zeichen';
-    });
+    transkriptInput.addEventListener("input", () => updateCharCount("transkript"));
+    anmoderationInput.addEventListener("input", () => updateCharCount("anmoderation"));
 
-    function generateXML() {
-      const text = transkriptInput.value.trim();
-      const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<transkript-analyse version="1.0">
-  <anweisung>
-    <beschreibung>Analyse des folgenden Transkripts eines TV-Beitrags</beschreibung>
-    <auswertungsanleitung>
-      <schritt nummer="2">
-        <ziel>Zentrale Fakten</ziel>
-        <form>kompakt in Stichpunkten, objektiv und belegbar</form>
-      </schritt>
-      <schritt nummer="3">
-        <ziel>Zentrales Thema</ziel>
-        <form>in einem Satz, kein Zitat, keine wörtliche Rede</form>
-      </schritt>
-      <schritt nummer="4">
-        <ziel>Informative Absicht</ziel>
-        <form>journalistische Zielsetzung des Beitrags, sachlich formuliert</form>
-      </schritt>
-      <schritt nummer="5">
-        <ziel>Beteiligte Personen oder Institutionen</ziel>
-        <form>Rollen, Funktionen, Namen – soweit im Text genannt</form>
-      </schritt>
-    </auswertungsanleitung>
-    <hinweise>
-      <hinweis>Nur belegbare Informationen aus dem Text verwenden</hinweis>
-      <hinweis>Keine erfundenen Inhalte</hinweis>
-      <hinweis>Nur Klartext-Ausgabe, keine XML-Ausgabe</hinweis>
-    </hinweise>
-  </anweisung>
+    function updateCharCount(type) {
+      const input = document.getElementById(type);
+      const count = input.value.length;
+      document.getElementById("charCount" + capitalize(type)).textContent = `${count} Zeichen`;
+    }
 
-  <quelle>
-    <textart>TV-Transkript</textart>
-    <originaltext>${escapeXml(text)}</originaltext>
-  </quelle>
-
-  <struktur>
-    <gliederung>
-      <einleitung>Einleitung / Anmoderation</einleitung>
-      <hauptteil>Hauptteil mit O-Tönen / Berichten</hauptteil>
-      <schluss>Ausblick / Fazit / Schlussbild</schluss>
-    </gliederung>
-    <zeitbezug>
-      <zeitpunkt>Vergangenheit, Gegenwart, Zukunft (je nach Inhalt markieren)</zeitpunkt>
-    </zeitbezug>
-    <raumbereich>
-      <ort>Ort(e) der Handlung / des Beitrags – wenn vorhanden</ort>
-    </raumbereich>
-    <themenschwerpunkt>
-      <beschreibung>Hauptthema des Beitrags, übergeordnetes Themafeld</beschreibung>
-    </themenschwerpunkt>
-  </struktur>
-
-  <auswertung>
-    <schritt nummer="2">
-      <zentrale-fakten></zentrale-fakten>
-    </schritt>
-    <schritt nummer="3">
-      <zentrales-thema></zentrales-thema>
-    </schritt>
-    <schritt nummer="4">
-      <informative-absicht></informative-absicht>
-    </schritt>
-    <schritt nummer="5">
-      <beteiligte-personen></beteiligte-personen>
-    </schritt>
-  </auswertung>
-</transkript-analyse>`;
-
-      xmlOutput.value = xml;
+    function capitalize(str) {
+      return str.charAt(0).toUpperCase() + str.slice(1);
     }
 
     function escapeXml(unsafe) {
@@ -140,17 +118,67 @@
         .replace(/'/g, "&apos;");
     }
 
+    function generateFinalXML() {
+      const transkript = escapeXml(transkriptInput.value.trim());
+      const anmoderation = escapeXml(anmoderationInput.value.trim());
+      const weightT = document.getElementById("weightTranskript").value;
+      const weightA = document.getElementById("weightAnmoderation").value;
+
+      const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<online-ausgabe version="1.0">
+  <quelle>
+    <art>TV-Beitrag</art>
+    <analysearten>
+      <transkript gewichtung="${weightT}">
+        <originaltext>${transkript}</originaltext>
+        <analyse>
+          <schritt nummer="2"><beschreibung>Zentrale Fakten</beschreibung></schritt>
+          <schritt nummer="3"><beschreibung>Zentrales Thema</beschreibung></schritt>
+          <schritt nummer="4"><beschreibung>Informative Absicht</description></schritt>
+          <schritt nummer="5"><beschreibung>Beteiligte Personen/Institutionen</description></schritt>
+        </analyse>
+      </transkript>
+      <anmoderation gewichtung="${weightA}">
+        <originaltext>${anmoderation}</originaltext>
+        <analyse>
+          <schritt nummer="2"><beschreibung>Sprachlich-inhaltliche Analyse</beschreibung></schritt>
+          <schritt nummer="3"><beschreibung>Zentrale Fakten</description></schritt>
+          <schritt nummer="4"><beschreibung>Zentrales Thema</description></schritt>
+          <schritt nummer="5"><beschreibung>Informative Absicht</description></schritt>
+          <schritt nummer="6"><beschreibung>Prognose: Worum könnte es gehen?</description></schritt>
+        </analyse>
+      </anmoderation>
+    </analysearten>
+  </quelle>
+
+  <editorial-metadata>
+    <ueberschrift länge-max="60"></ueberschrift>
+    <kurzbeschreibung länge-max="150"></kurzbeschreibung>
+    <seo>
+      <keywords max="10">
+        <keyword></keyword>
+      </keywords>
+      <themen max="5">
+        <thema></thema>
+      </themen>
+    </seo>
+  </editorial-metadata>
+</online-ausgabe>`;
+
+      finalXmlOutput.value = xml;
+    }
+
     function copyToClipboard() {
-      xmlOutput.select();
+      finalXmlOutput.select();
       document.execCommand("copy");
     }
 
     function downloadXML() {
-      const blob = new Blob([xmlOutput.value], { type: "application/xml" });
+      const blob = new Blob([finalXmlOutput.value], { type: "application/xml" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = "transkript-analyse.xml";
+      a.download = "finale-online-ausgabe.xml";
       a.click();
       URL.revokeObjectURL(url);
     }
