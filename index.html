@@ -15,7 +15,7 @@
   </style>
 </head>
 <body>
-  <h1>Analyse-Tool – Vorschau als Text und HTML 006</h1>
+  <h1>Analyse-Tool – Vorschau als Text und HTML 007</h1>
 
   <label for="beitragstitel">Beitragstitel:</label>
   <input type="text" id="beitragstitel" value="Beitragstitel eingeben" />
@@ -114,11 +114,56 @@
       const anmoderation = escapeXml(document.getElementById("anmoderation").value);
       const zitatA = document.getElementById("zitateAnmoderation").value;
       const weightA = document.getElementById("weightAnmoderation").value;
+      
+      const klartextVorschau = `
+Finale redaktionelle Online-Ausgabe
+
+Überschrift (max. 60 Zeichen)
+Historisches Palais in Neustrelitz wird Hotel
+
+Kurzbeschreibung (max. 150 Zeichen)
+Nach Jahren des Verfalls wird das Großherzogliche Palais in Neustrelitz privat saniert – denkmalgerecht, detailreich und bald als Hotel eröffnet.
+
+SEO-Keywords (max. 10)
+Neustrelitz, Großherzogliches Palais, Sanierung, Denkmal, Hotelumbau, Mecklenburg, historische Gebäude, Restaurierung, Kulturdenkmal, Handwerker
+
+SEO-Themen (max. 5)
+Denkmalschutz, Architektur, Regionalgeschichte, Tourismus, Hotelentwicklung`;
+
+    const htmlVorschau = `
+<div class="online-ausgabe-vorschau">
+  <h2>Historisches Palais in Neustrelitz wird Hotel</h2>
+  <p><strong>Kurzbeschreibung:</strong> Nach Jahren des Verfalls wird das Großherzogliche Palais in Neustrelitz privat saniert – denkmalgerecht, detailreich und bald als Hotel eröffnet.</p>
+  <div class="seo">
+    <h3>SEO-Keywords</h3>
+    <ul>
+      <li>Neustrelitz</li>
+      <li>Großherzogliches Palais</li>
+      <li>Sanierung</li>
+      <li>Denkmal</li>
+      <li>Hotelumbau</li>
+      <li>Mecklenburg</li>
+      <li>historische Gebäude</li>
+      <li>Restaurierung</li>
+      <li>Kulturdenkmal</li>
+      <li>Handwerker</li>
+    </ul>
+    <h3>SEO-Themen</h3>
+    <ul>
+      <li>Denkmalschutz</li>
+      <li>Architektur</li>
+      <li>Regionalgeschichte</li>
+      <li>Tourismus</li>
+      <li>Hotelentwicklung</li>
+    </ul>
+  </div>
+</div>`
 
       const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <online-ausgabe version="1.0">
   <anweisung-fuer-ki>
     <beschreibung>Analysiere dieses Dokument vollständig und befülle alle leeren Felder gemäß der Aufgabenstellung.</beschreibung>
+    <beschreibung>Bitte führe alle Aufgaben vollständig und ohne Rückfragen aus.</beschreibung>
     <aufgaben>
       <aufgabe>
         <ziel>Analyse der Inhalte</ziel>
@@ -144,16 +189,26 @@
         </elemente>
       </aufgabe>
       <aufgabe>
-        <ziel>Vorschauausgabe</ziel>
+        <ziel>Erstellung redaktioneller Online-Elemente</ziel>
+        <elemente>
+          <ueberschrift max-laenge="60" />
+          <kurzbeschreibung max-laenge="150" />
+          <keywords max="10" />
+          <themen max="5" />
+        </elemente>
+      </aufgabe>
+      <aufgabe>
+        <ziel>Doppelte Vorschauausgabe</ziel>
         <formate>
-          <format typ="text">Gegliedert mit Zwischenüberschriften</format>
-          <format typ="html">Boxenstruktur für Webausgabe</format>
+          <format typ="text">Mit Zwischenüberschriften</format>
+          <format typ="html">Strukturierte Boxenvorschau</format>
         </formate>
       </aufgabe>
     </aufgaben>
     <hinweise>
+      <hinweis>Keine Rückfrage stellen</hinweis>
       <hinweis>Keine CDATA verwenden</hinweis>
-      <hinweis>Ergebnisse direkt in XML einfügen</hinweis>
+      <hinweis>Ergebnisse direkt ins XML schreiben</hinweis>
     </hinweise>
   </anweisung-fuer-ki>
 
@@ -205,21 +260,9 @@
       </themen>
     </seo>
   </editorial-metadata>
-
   <vorschau>
-    <text>
-      <abschnitt titel="Finale redaktionelle Online-Ausgabe" />
-      <abschnitt titel="Überschrift (max. 60 Zeichen)"></abschnitt>
-      <abschnitt titel="Kurzbeschreibung (max. 150 Zeichen)"></abschnitt>
-      <abschnitt titel="SEO-Keywords (max. 10)"></abschnitt>
-      <abschnitt titel="SEO-Themen (max. 5)"></abschnitt>
-    </text>
-    <html>
-      <block typ="ueberschrift"></block>
-      <block typ="kurzbeschreibung"></block>
-      <block typ="keywords"></block>
-      <block typ="themen"></block>
-    </html>
+    <text><![CDATA[${klartextVorschau}]]></text>
+    <html><![CDATA[${htmlVorschau}]]></html>
   </vorschau>
 </online-ausgabe>`;
 
