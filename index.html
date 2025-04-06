@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <title>Analyse-Tool – XML-Struktur gemäß Vorgabe</title>
+  <meta charset="UTF-8">
+  <title>Analyse-Tool mit Vorschau-Ausgabe (HTML + Text)</title>
   <style>
     body { font-family: Arial, sans-serif; max-width: 960px; margin: auto; padding: 20px; }
     textarea, select, input[type="text"] {
@@ -15,7 +15,7 @@
   </style>
 </head>
 <body>
-  <h1>Analyse-Tool mit vollständigem XML-Ausgabeformat 003</h1>
+  <h1>Analyse-Tool mit strukturierter Vorschau-Ausgabe</h1>
 
   <label for="beitragstitel">Beitragstitel:</label>
   <input type="text" id="beitragstitel" placeholder="z. B. Sanierung des Großherzoglichen Palais" />
@@ -93,33 +93,28 @@
   </div>
 
   <script>
-    function escapeXml(unsafe) {
-      return unsafe
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&apos;");
+    function escapeXml(str) {
+      return str.replace(/&/g, "&amp;").replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;").replace(/"/g, "&quot;")
+                .replace(/'/g, "&apos;");
     }
 
-    function generateTimestampISO() {
+    function generateTimestamp() {
       const now = new Date();
-      return now.toISOString();
+      const iso = now.toISOString();
+      const readable = now.toLocaleDateString("de-DE") + ", " + now.toLocaleTimeString("de-DE");
+      return { iso, readable };
     }
 
     function generateFinalXML() {
-      const timestamp = new Date().toLocaleString("de-DE");
-      const isoTime = generateTimestampISO();
-
+      const { iso, readable } = generateTimestamp();
       const titel = escapeXml(document.getElementById("beitragstitel").value.trim());
       const slugId = escapeXml(document.getElementById("slugId").value.trim());
       const ressort = escapeXml(document.getElementById("ressort").value);
       const tags = escapeXml(document.getElementById("tags").value.trim());
-
       const transkript = escapeXml(document.getElementById("transkript").value.trim());
       const zitateT = document.getElementById("zitateTranskript").value;
       const weightT = document.getElementById("weightTranskript").value;
-
       const anmoderation = escapeXml(document.getElementById("anmoderation").value.trim());
       const zitateA = document.getElementById("zitateAnmoderation").value;
       const weightA = document.getElementById("weightAnmoderation").value;
@@ -144,7 +139,7 @@
         </gilt-fuer>
       </aufgabe>
       <aufgabe>
-        <ziel>Erstellung redaktioneller Online-Elemente aus beiden Quellen</ziel>
+        <ziel>Erstellung redaktioneller Online-Elemente</ziel>
         <elemente>
           <ueberschrift max-laenge="60">Überschrift in aktiver Sprache mit klaren Keywords</ueberschrift>
           <kurzbeschreibung max-laenge="150">Faktenbasierte Kurzbeschreibung mit klarer Aussage, kein Fließtext</kurzbeschreibung>
@@ -155,7 +150,12 @@
       <aufgabe>
         <ziel>Ausgabeformat</ziel>
         <formate>
-          <format typ="text">Alle Ergebnisse direkt im XML-Dokument einfügen, keine separate Textausgabe</format>
+          <format typ="xml">Alle Ergebnisse direkt in die entsprechenden XML-Knoten einfügen</format>
+          <format typ="vorschau">
+            Gib die Ergebnisse doppelt aus:
+            <form text="klar gegliedert mit Zwischenüberschriften" />
+            <form html="strukturierte Darstellung in Boxen, lesefreundlich" />
+          </format>
         </formate>
       </aufgabe>
     </aufgaben>
@@ -169,8 +169,8 @@
   </anweisung-fuer-ki>
 
   <quelle>
-    <id>beitrag-${timestamp}</id>
-    <zeitstempel>${isoTime}</zeitstempel>
+    <id>beitrag-${readable}</id>
+    <zeitstempel>${iso}</zeitstempel>
     <slug-id>${slugId}</slug-id>
     <art>TV-Beitrag</art>
     <titel>${titel}</titel>
@@ -229,6 +229,21 @@
       </themen>
     </seo>
   </editorial-metadata>
+
+  <vorschau>
+    <text>
+      <ueberschrift></ueberschrift>
+      <kurzbeschreibung></kurzbeschreibung>
+      <keywords></keywords>
+      <themen></themen>
+    </text>
+    <html>
+      <block typ="ueberschrift"></block>
+      <block typ="kurzbeschreibung"></block>
+      <block typ="keywords"></block>
+      <block typ="themen"></block>
+    </html>
+  </vorschau>
 </online-ausgabe>`;
 
       document.getElementById("finalXml").value = xml;
