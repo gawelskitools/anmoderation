@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <title>Analyse-Tool – Finale XML mit strukturierter KI-Anweisung</title>
+  <title>Analyse-Tool – XML-Struktur gemäß Vorgabe</title>
   <style>
     body { font-family: Arial, sans-serif; max-width: 960px; margin: auto; padding: 20px; }
     textarea, select, input[type="text"] {
@@ -11,15 +11,17 @@
     textarea { height: 160px; }
     .analyse-block { margin-bottom: 30px; border-top: 1px solid #ccc; padding-top: 20px; }
     .button-group { margin-top: 10px; display: flex; gap: 10px; flex-wrap: wrap; }
-    label span { font-weight: normal; font-size: 14px; margin-left: 10px; color: #555; }
     h2 { margin-top: 40px; }
   </style>
 </head>
 <body>
-  <h1>Analyse-Tool für Transkript & Anmoderation 002</h1>
+  <h1>Analyse-Tool mit vollständigem XML-Ausgabeformat</h1>
 
   <label for="beitragstitel">Beitragstitel:</label>
   <input type="text" id="beitragstitel" placeholder="z. B. Sanierung des Großherzoglichen Palais" />
+
+  <label for="slugId">Slug-ID:</label>
+  <input type="text" id="slugId" placeholder="z. B. sanierung-grossherzogliches-palais-neustrelitz" />
 
   <label for="ressort">Ressort:</label>
   <select id="ressort">
@@ -42,33 +44,41 @@
   </select>
 
   <label for="tags">Tags (kommagetrennt):</label>
-  <input type="text" id="tags" placeholder="z. B. Sanierung, Denkmal, Neustrelitz, Hotel" />
+  <input type="text" id="tags" placeholder="z. B. Sanierung, Denkmal, Hotel" />
 
   <div class="analyse-block">
     <h2>Transkript</h2>
-    <label for="transkript">Text <span id="charCountTranskript">0 Zeichen</span></label>
-    <textarea id="transkript" placeholder="Geben Sie hier das Transkript ein..."></textarea>
-
-    <label for="weightTranskript">Gewichtung:</label>
+    <label for="transkript">Text:</label>
+    <textarea id="transkript" placeholder="Transkript eingeben..."></textarea>
+    <label>Zitate erlaubt?</label>
+    <select id="zitateTranskript">
+      <option value="true" selected>Ja</option>
+      <option value="false">Nein</option>
+    </select>
+    <label>Gewichtung:</label>
     <select id="weightTranskript">
       <option value="0">0 %</option>
       <option value="25">25 %</option>
-      <option value="50" selected>50 %</option>
-      <option value="75">75 %</option>
+      <option value="50">50 %</option>
+      <option value="75" selected>75 %</option>
       <option value="100">100 %</option>
     </select>
   </div>
 
   <div class="analyse-block">
     <h2>Anmoderation</h2>
-    <label for="anmoderation">Text <span id="charCountAnmoderation">0 Zeichen</span></label>
-    <textarea id="anmoderation" placeholder="Geben Sie hier die Anmoderation ein..."></textarea>
-
-    <label for="weightAnmoderation">Gewichtung:</label>
+    <label for="anmoderation">Text:</label>
+    <textarea id="anmoderation" placeholder="Anmoderation eingeben..."></textarea>
+    <label>Zitate erlaubt?</label>
+    <select id="zitateAnmoderation">
+      <option value="true" selected>Ja</option>
+      <option value="false">Nein</option>
+    </select>
+    <label>Gewichtung:</label>
     <select id="weightAnmoderation">
       <option value="0">0 %</option>
-      <option value="25">25 %</option>
-      <option value="50" selected>50 %</option>
+      <option value="25" selected>25 %</option>
+      <option value="50">50 %</option>
       <option value="75">75 %</option>
       <option value="100">100 %</option>
     </select>
@@ -77,14 +87,12 @@
   <h2>Finale XML-Ausgabe</h2>
   <textarea id="finalXml" placeholder="Hier erscheint das finale XML..."></textarea>
   <div class="button-group">
-    <button onclick="copyToClipboard()">In Zwischenablage kopieren</button>
-    <button onclick="downloadXML()">XML herunterladen</button>
+    <button onclick="copyToClipboard()">Kopieren</button>
+    <button onclick="downloadXML()">Herunterladen</button>
     <button onclick="generateFinalXML()">Finales XML erstellen</button>
   </div>
 
   <script>
-    const finalXmlOutput = document.getElementById("finalXml");
-
     function escapeXml(unsafe) {
       return unsafe
         .replace(/&/g, "&amp;")
@@ -94,45 +102,41 @@
         .replace(/'/g, "&apos;");
     }
 
-    function generateTimestamp() {
+    function generateTimestampISO() {
       const now = new Date();
-      const d = now.toLocaleDateString("de-DE");
-      const t = now.toLocaleTimeString("de-DE");
-      return `${d} ${t}`;
+      return now.toISOString();
     }
-
-    function updateCharCount(id) {
-      const count = document.getElementById(id).value.length;
-      document.getElementById("charCount" + id.charAt(0).toUpperCase() + id.slice(1)).textContent = `${count} Zeichen`;
-    }
-
-    document.getElementById("transkript").addEventListener("input", () => updateCharCount("transkript"));
-    document.getElementById("anmoderation").addEventListener("input", () => updateCharCount("anmoderation"));
 
     function generateFinalXML() {
-      const id = "beitrag-" + generateTimestamp();
+      const timestamp = new Date().toLocaleString("de-DE");
+      const isoTime = generateTimestampISO();
+
       const titel = escapeXml(document.getElementById("beitragstitel").value.trim());
+      const slugId = escapeXml(document.getElementById("slugId").value.trim());
       const ressort = escapeXml(document.getElementById("ressort").value);
       const tags = escapeXml(document.getElementById("tags").value.trim());
 
       const transkript = escapeXml(document.getElementById("transkript").value.trim());
-      const anmoderation = escapeXml(document.getElementById("anmoderation").value.trim());
+      const zitateT = document.getElementById("zitateTranskript").value;
       const weightT = document.getElementById("weightTranskript").value;
+
+      const anmoderation = escapeXml(document.getElementById("anmoderation").value.trim());
+      const zitateA = document.getElementById("zitateAnmoderation").value;
       const weightA = document.getElementById("weightAnmoderation").value;
 
       const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <online-ausgabe version="1.0">
   <anweisung-fuer-ki>
-    <beschreibung>Bitte analysiere dieses XML vollständig.</beschreibung>
+    <beschreibung>Analysiere dieses Dokument vollständig und befülle alle leeren Felder gemäß der untenstehenden Aufgabenstellung.</beschreibung>
     <aufgaben>
       <aufgabe>
-        <ziel>Analyse der Analysearten</ziel>
+        <ziel>Analyse der Inhalte</ziel>
         <schritte>
-          <schritt nummer="2">Zentrale Fakten</schritt>
-          <schritt nummer="3">Zentrales Thema</schritt>
-          <schritt nummer="4">Informative Absicht</schritt>
-          <schritt nummer="5">Beteiligte Personen oder Institutionen</schritt>
-          <schritt nummer="6">Prognose zum Beitragsinhalt (falls vorhanden)</schritt>
+          <schritt nummer="2">Zentrale Fakten herausfiltern</schritt>
+          <schritt nummer="3">Zentrales Thema formulieren</schritt>
+          <schritt nummer="4">Informative Absicht erkennen</schritt>
+          <schritt nummer="5">Beteiligte Personen oder Institutionen benennen</schritt>
+          <schritt nummer="6">Prognose zum Beitrag erstellen (falls möglich)</schritt>
         </schritte>
         <gilt-fuer>
           <quelle>Transkript</quelle>
@@ -140,30 +144,34 @@
         </gilt-fuer>
       </aufgabe>
       <aufgabe>
-        <ziel>Erstellung redaktioneller Online-Elemente</ziel>
+        <ziel>Erstellung redaktioneller Online-Elemente aus beiden Quellen</ziel>
         <elemente>
-          <ueberschrift max-laenge="60">Klare Keywords, keine Füllwörter</ueberschrift>
-          <kurzbeschreibung max-laenge="150">Prägnant, faktenbasiert, mit klarer Aussage</kurzbeschreibung>
-          <keywords max="10">Thematisch relevant, trennscharf</keywords>
-          <themen max="5">Übergeordnete Themenfelder</themen>
+          <ueberschrift max-laenge="60">Überschrift in aktiver Sprache mit klaren Keywords</ueberschrift>
+          <kurzbeschreibung max-laenge="150">Faktenbasierte Kurzbeschreibung mit klarer Aussage, kein Fließtext</kurzbeschreibung>
+          <keywords max="10">Thematisch präzise, max. 3 Wörter je Begriff</keywords>
+          <themen max="5">Breit gefasste, übergeordnete Themenbereiche</themen>
         </elemente>
       </aufgabe>
       <aufgabe>
-        <ziel>Ausgabeformat der Ergebnisse</ziel>
+        <ziel>Ausgabeformat</ziel>
         <formate>
-          <format typ="html">Lesefreundlich, strukturiert in Boxen</format>
-          <format typ="text">Klar gegliedert mit Zwischenüberschriften</format>
+          <format typ="text">Alle Ergebnisse direkt im XML-Dokument einfügen, keine separate Textausgabe</format>
         </formate>
       </aufgabe>
     </aufgaben>
     <hinweise>
-      <hinweis>Vermeide CDATA</hinweis>
-      <hinweis>Halte dich an die Ausgabevorgaben in den XML-Attributen</hinweis>
+      <hinweis>Keine CDATA verwenden</hinweis>
+      <hinweis>Halte dich exakt an die Längenangaben in den Attributen</hinweis>
+      <hinweis>Struktur und Reihenfolge der Felder nicht verändern</hinweis>
+      <hinweis>Alle Inhalte direkt in die jeweiligen XML-Knoten schreiben</hinweis>
+      <hinweis>Keine Bestätigung oder Rückfrage am Anfang oder Ende</hinweis>
     </hinweise>
   </anweisung-fuer-ki>
 
   <quelle>
-    <id>${id}</id>
+    <id>beitrag-${timestamp}</id>
+    <zeitstempel>${isoTime}</zeitstempel>
+    <slug-id>${slugId}</slug-id>
     <art>TV-Beitrag</art>
     <titel>${titel}</titel>
     <themenvorgabe>
@@ -172,15 +180,18 @@
     </themenvorgabe>
     <analysearten>
       <transkript gewichtung="${weightT}">
+        <zitate-erlaubt>${zitateT}</zitate-erlaubt>
         <originaltext>${transkript}</originaltext>
         <analyse>
           <schritt nummer="2"></schritt>
           <schritt nummer="3"></schritt>
           <schritt nummer="4"></schritt>
           <schritt nummer="5"></schritt>
+          <schritt nummer="6"></schritt>
         </analyse>
       </transkript>
       <anmoderation gewichtung="${weightA}">
+        <zitate-erlaubt>${zitateA}</zitate-erlaubt>
         <originaltext>${anmoderation}</originaltext>
         <analyse>
           <schritt nummer="2"></schritt>
@@ -199,24 +210,38 @@
     <seo>
       <keywords max="10">
         <keyword></keyword>
+        <keyword></keyword>
+        <keyword></keyword>
+        <keyword></keyword>
+        <keyword></keyword>
+        <keyword></keyword>
+        <keyword></keyword>
+        <keyword></keyword>
+        <keyword></keyword>
+        <keyword></keyword>
       </keywords>
       <themen max="5">
-        <thema></thema>
+        <thema typ=""></thema>
+        <thema typ=""></thema>
+        <thema typ=""></thema>
+        <thema typ=""></thema>
+        <thema typ=""></thema>
       </themen>
     </seo>
   </editorial-metadata>
 </online-ausgabe>`;
 
-      finalXmlOutput.value = xml;
+      document.getElementById("finalXml").value = xml;
     }
 
     function copyToClipboard() {
-      finalXmlOutput.select();
+      const output = document.getElementById("finalXml");
+      output.select();
       document.execCommand("copy");
     }
 
     function downloadXML() {
-      const blob = new Blob([finalXmlOutput.value], { type: "application/xml" });
+      const blob = new Blob([document.getElementById("finalXml").value], { type: "application/xml" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
