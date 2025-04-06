@@ -35,33 +35,32 @@
         });
 
         function generateXML() {
-            const text = anmoInput.value.trim();
-            const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<anmoderation-analyse version="1.0">\n
+  const text = anmoInput.value.trim();
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<anmoderation-analyse version="1.0">\n
   <anweisung-fuer-ki><![CDATA[
-    Bitte analysiere nur den Originaltext. Gib mir direkt die Ergebnisse aus Schritt 2 bis 5 aus:
-    
-    - Schritt 2: Kurzbeschreibung (max. 150 Zeichen, journalistisch)
-    - Schritt 3: Überschrift (max. 60 Zeichen, SEO-tauglich)
-    - Schritt 4: SEO-Keywords (10 Begriffe, kommagetrennt, ohne Dopplung mit Themen)
-    - Schritt 5: SEO-Themen (5 Begriffe, kommagetrennt, ohne Dopplung mit Keywords)
+    Bitte analysiere nur den Originaltext. Gib mir die folgenden Punkte strukturiert aus:
 
-    Verwende nur belegbare Informationen aus dem Text. Keine erfundenen Inhalte. Keine XML-Ausgabe. Nur Klartext-Ausgabe. 
+    - Schritt 2: Sprachliche & inhaltliche Analyse (Zeit, Ort, Personen, Handlung, Kontext, Stil)
+    - Schritt 3: Zentrale Fakten (konkrete Informationen in Stichpunkten)
+    - Schritt 4: Zentrales Thema (kurz, allgemein gefasst)
+    - Schritt 5: Informative Absicht (Was will der Beitrag erreichen?)
+    - Schritt 6: Prognose – Worum könnte es im Beitrag gehen?
+
+    Gib die Ergebnisse jeweils mit Abschnittsüberschriften aus. Keine erfundenen Inhalte, nur belegbares aus dem Text. Keine XML-Ausgabe – nur Klartext.
   ]]></anweisung-fuer-ki>\n
   <quelle>\n    <textart>TV-Anmoderation</textart>\n    <originaltext><![CDATA[\n${text}\n    ]]></originaltext>\n  </quelle>\n
   <struktur>\n
-    <hook>\n      <form><![CDATA[\n        <!-- Thematischer Einstieg: z. B. emotional, provokant, pointiert -->\n      ]]></form>\n      <wirkung><![CDATA[\n        <!-- Welche Wirkung soll erzielt werden? (Neugier, Schock, Spannung...) -->\n      ]]></wirkung>\n    </hook>\n
-    <kerninhalt>\n      <was><![CDATA[\n        <!-- Was ist passiert? -->\n      ]]></was>\n      <wo><![CDATA[\n        <!-- Wo? -->\n      ]]></wo>\n      <wann><![CDATA[\n        <!-- Wann? -->\n      ]]></wann>\n      <wem><![CDATA[\n        <!-- Wem ist es passiert / Wer ist betroffen? -->\n      ]]></wem>\n      <hintergrund><![CDATA[\n        <!-- Hintergrund / Kontext des Ereignisses -->\n      ]]></hintergrund>\n    </kerninhalt>\n
-    <akteure>\n      <beteiligte><![CDATA[\n        <!-- Wer kommt vor? Wer handelt oder ist betroffen? -->\n      ]]></beteiligte>\n    </akteure>\n
-    <zielrichtung>\n      <inhaltlichesZiel><![CDATA[\n        <!-- Was will der Beitrag erreichen? -->\n      ]]></inhaltlichesZiel>\n      <zeitbezug>\n        <moeglich>Gegenwart</moeglich>\n        <moeglich>Zukunft</moeglich>\n        <moeglich>Vergangenheit</moeglich>\n      </zeitbezug>\n    </zielrichtung>\n
-    <tonlage>\n      <stil>\n        <moeglich>sachlich</moeglich>\n        <moeglich>emotional</moeglich>\n        <moeglich>dramatisch</moeglich>\n        <moeglich>erklärend</moeglich>\n        <moeglich>neutral</moeglich>\n      </stil>\n      <beschreibung><![CDATA[\n        <!-- Textmerkmale, die Tonfall und Erzählweise belegen -->\n      ]]></beschreibung>\n    </tonlage>\n
+    <analyse>\n
+      <sprachlich-inhaltlich><![CDATA[\n        <!-- Schritt 2: Zeit, Ort, Personen, Handlung, Kontext, Stil -->\n      ]]></sprachlich-inhaltlich>\n
+      <zentrale-fakten><![CDATA[\n        <!-- Schritt 3: Alle belegbaren Informationen in Stichpunkten -->\n      ]]></zentrale-fakten>\n
+      <zentrales-thema><![CDATA[\n        <!-- Schritt 4: Übergeordnetes Thema in einem Satz -->\n      ]]></zentrales-thema>\n
+      <intention-des-beitrags><![CDATA[\n        <!-- Schritt 5: Welche Absicht verfolgt der Beitrag? -->\n      ]]></intention-des-beitrags>\n
+      <vermuteter-inhalt><![CDATA[\n        <!-- Schritt 6: Worum könnte es im Beitrag konkret gehen? -->\n      ]]></vermuteter-inhalt>\n
+    </analyse>\n
   </struktur>\n
-  <auswertung>\n    <schritt2>\n      <teasertext><![CDATA[\n        <!-- Ein Satz, journalistisch, max. 150 Zeichen -->\n      ]]></teasertext>\n    </schritt2>\n
-    <schritt3>\n      <ueberschrift><![CDATA[\n        <!-- Aussagekräftige Überschrift, max. 60 Zeichen -->\n      ]]></ueberschrift>\n    </schritt3>\n
-    <schritt4>\n      <seo_keywords><![CDATA[\n        <!-- Kommagetrennte Keywords: Begriff1, Begriff2, ... -->\n      ]]></seo_keywords>\n    </schritt4>\n
-    <schritt5>\n      <seo_themen><![CDATA[\n        <!-- Kommagetrennte Themen: Thema1, Thema2, ... -->\n      ]]></seo_themen>\n    </schritt5>\n  </auswertung>\n
 </anmoderation-analyse>`;
 
-            xmlOutput.value = xml;
+  xmlOutput.value = xml;
         }
 
         function copyToClipboard() {
