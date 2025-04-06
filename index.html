@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <title>Analyse-Tool – Finale XML mit KI-Anweisung</title>
+  <title>Analyse-Tool – Finale XML mit strukturierter KI-Anweisung</title>
   <style>
     body { font-family: Arial, sans-serif; max-width: 960px; margin: auto; padding: 20px; }
     textarea, select, input[type="text"] {
@@ -17,21 +17,6 @@
 </head>
 <body>
   <h1>Analyse-Tool für Transkript & Anmoderation</h1>
-
-  <label for="kiInstruction">KI-Anweisung (fest eingebettet, editierbar):</label>
-  <textarea id="kiInstruction">
-Bitte analysiere dieses XML vollständig. 
-1. Arbeite alle Analyse-Schritte 2–6 jeder Analyseart (Transkript und Anmoderation) aus.
-2. Verwende die Ergebnisse dieser Analysen zur Erstellung folgender redaktioneller Online-Elemente:
-   - Überschrift (max. 60 Zeichen, klare Keywords, keine Füllwörter)
-   - Kurzbeschreibung (max. 150 Zeichen, mit klarer Aussage)
-   - SEO-Keywords (max. 10, thematisch relevant, trennscharf)
-   - SEO-Themen (max. 5, übergeordnete Themenfelder)
-3. Gib die Ergebnisse doppelt aus:
-   a) als Vorschau-HTML (lesefreundlich, strukturiert in Boxen)
-   b) als textbasierte Vorschau mit klaren Zwischenüberschriften
-Vermeide CDATA und halte dich an die Ausgabevorgaben in den XML-Attributen.
-  </textarea>
 
   <label for="beitragstitel">Beitragstitel:</label>
   <input type="text" id="beitragstitel" placeholder="z. B. Sanierung des Großherzoglichen Palais" />
@@ -130,7 +115,6 @@ Vermeide CDATA und halte dich an die Ausgabevorgaben in den XML-Attributen.
       const ressort = escapeXml(document.getElementById("ressort").value);
       const tags = escapeXml(document.getElementById("tags").value.trim());
 
-      const kiInstruction = escapeXml(document.getElementById("kiInstruction").value.trim());
       const transkript = escapeXml(document.getElementById("transkript").value.trim());
       const anmoderation = escapeXml(document.getElementById("anmoderation").value.trim());
       const weightT = document.getElementById("weightTranskript").value;
@@ -138,7 +122,46 @@ Vermeide CDATA und halte dich an die Ausgabevorgaben in den XML-Attributen.
 
       const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <online-ausgabe version="1.0">
-  <anweisung-fuer-ki>${kiInstruction}</anweisung-fuer-ki>
+  <anweisung-fuer-ki>
+    <beschreibung>Bitte analysiere dieses XML vollständig.</beschreibung>
+    <aufgaben>
+      <aufgabe>
+        <ziel>Analyse der Analysearten</ziel>
+        <schritte>
+          <schritt nummer="2">Zentrale Fakten</schritt>
+          <schritt nummer="3">Zentrales Thema</schritt>
+          <schritt nummer="4">Informative Absicht</schritt>
+          <schritt nummer="5">Beteiligte Personen oder Institutionen</schritt>
+          <schritt nummer="6">Prognose zum Beitragsinhalt (falls vorhanden)</schritt>
+        </schritte>
+        <gilt-fuer>
+          <quelle>Transkript</quelle>
+          <quelle>Anmoderation</quelle>
+        </gilt-fuer>
+      </aufgabe>
+      <aufgabe>
+        <ziel>Erstellung redaktioneller Online-Elemente</ziel>
+        <elemente>
+          <ueberschrift max-laenge="60">Klare Keywords, keine Füllwörter</ueberschrift>
+          <kurzbeschreibung max-laenge="150">Prägnant, faktenbasiert, mit klarer Aussage</kurzbeschreibung>
+          <keywords max="10">Thematisch relevant, trennscharf</keywords>
+          <themen max="5">Übergeordnete Themenfelder</themen>
+        </elemente>
+      </aufgabe>
+      <aufgabe>
+        <ziel>Ausgabeformat der Ergebnisse</ziel>
+        <formate>
+          <format typ="html">Lesefreundlich, strukturiert in Boxen</format>
+          <format typ="text">Klar gegliedert mit Zwischenüberschriften</format>
+        </formate>
+      </aufgabe>
+    </aufgaben>
+    <hinweise>
+      <hinweis>Vermeide CDATA</hinweis>
+      <hinweis>Halte dich an die Ausgabevorgaben in den XML-Attributen</hinweis>
+    </hinweise>
+  </anweisung-fuer-ki>
+
   <quelle>
     <id>${id}</id>
     <art>TV-Beitrag</art>
@@ -151,20 +174,20 @@ Vermeide CDATA und halte dich an die Ausgabevorgaben in den XML-Attributen.
       <transkript gewichtung="${weightT}">
         <originaltext>${transkript}</originaltext>
         <analyse>
-          <schritt nummer="2">Zentrale Fakten</schritt>
-          <schritt nummer="3">Zentrales Thema</schritt>
-          <schritt nummer="4">Informative Absicht</schritt>
-          <schritt nummer="5">Beteiligte Personen oder Institutionen</schritt>
+          <schritt nummer="2"></schritt>
+          <schritt nummer="3"></schritt>
+          <schritt nummer="4"></schritt>
+          <schritt nummer="5"></schritt>
         </analyse>
       </transkript>
       <anmoderation gewichtung="${weightA}">
         <originaltext>${anmoderation}</originaltext>
         <analyse>
-          <schritt nummer="2">Sprachlich-inhaltliche Analyse</schritt>
-          <schritt nummer="3">Zentrale Fakten</schritt>
-          <schritt nummer="4">Zentrales Thema</schritt>
-          <schritt nummer="5">Informative Absicht</schritt>
-          <schritt nummer="6">Prognose: Worum könnte es im Beitrag gehen?</schritt>
+          <schritt nummer="2"></schritt>
+          <schritt nummer="3"></schritt>
+          <schritt nummer="4"></schritt>
+          <schritt nummer="5"></schritt>
+          <schritt nummer="6"></schritt>
         </analyse>
       </anmoderation>
     </analysearten>
