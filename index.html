@@ -12,7 +12,7 @@
     </style>
 </head>
 <body>
-    <h1>Transkript zu XML (Strukturanalyse + Auswertungsschritte)</h1>
+    <h1>Transkript zu XML2 (Strukturanalyse + Auswertungsschritte)</h1>
     <label for="transkript">Transkript <span id="charCount">0 Zeichen</span></label>
     <textarea id="transkript" placeholder="Geben Sie hier den Originaltext des Transkriptes ein..."></textarea>
 
@@ -30,8 +30,8 @@
         const xmlOutput = document.getElementById('xmlOutput');
         const charCount = document.getElementById('charCount');
 
-        anmoInput.addEventListener('input', () => {
-            charCount.textContent = anmoInput.value.length + ' Zeichen';
+        transkriptInput.addEventListener('input', () => {
+            charCount.textContent = transkriptInput.value.length + ' Zeichen';
         });
 
         function generateXML() {
@@ -62,7 +62,7 @@
   </auswertung>\n
 </transkript-analyse>`;
 
-  transkriptXMLOutput.value = xml;
+  XMLOutput.value = xml;
         }
 
         function copyToClipboard() {
