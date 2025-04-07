@@ -125,7 +125,7 @@
   <ausgabe-format>nur-redaktionelle-inhalte</ausgabe-format>
   <anweisung-fuer-ki>
     <beschreibung>
-      Verarbeite dieses XML sofort nach dem Einlesen. Lies alle &lt;originaltext&gt;-Felder, analysiere sie gemäß den &lt;aufgaben&gt;, fülle alle &lt;analyse&gt;-Felder sowie alle redaktionellen Felder in &lt;editorial-metadata&gt; automatisch aus. Erstelle zusätzlich strukturierte Vorschauen in &lt;vorschau&gt;&lt;text&gt; und &lt;vorschau&gt;&lt;html&gt;. Gib alle Ergebnisse vollständig aus, ohne Rückfragen, Kommentare oder Hinweise. Die Ausgabe erfolgt ausschließlich als redaktioneller Inhalt.
+      Verarbeite dieses XML sofort nach dem Einlesen. Lies alle &lt;originaltext&gt;-Felder, analysiere sie gemäß den &lt;aufgaben&gt;, fülle alle &lt;analyse&gt;-Felder sowie alle redaktionellen Felder in &lt;editorial-metadata&gt; automatisch aus. Erstelle zusätzlich eine strukturierte Vorschau in &lt;vorschau&gt;&lt;text&gt; <!--und &lt;vorschau&gt;&lt;html&gt;-->. Gib alle Ergebnisse vollständig aus, ohne Rückfragen, Kommentare oder Hinweise. Die Ausgabe erfolgt ausschließlich als redaktioneller Inhalt.
     </beschreibung>
     <ausfuehrung>jetzt-analyse-starten</ausfuehrung>
     <aufgaben>
@@ -152,7 +152,7 @@
           </ueberschrift>
           <kurzbeschreibung>
             <max-laenge>150</max-laenge>
-            <stil>klarer Hauptsatz, möglichst ohne Nebensätze, Doppelpunkte und Gedankenstriche erlaubt</stil>
+            <stil>klarer Hauptsatz, Nebensätze möglichst vermeiden, Doppelpunkte sind erlaubt für Ausführungen oder Zusammenfassungen, Gedankenstriche sind erlaubt um um den Kontext zu erläutern oder um Informationen zu verdichten</stil>
           </kurzbeschreibung>
           <keywords>
             <max-anzahl>10</max-anzahl>
@@ -178,7 +178,7 @@
       <hinweis>Verwende keine CDATA.</hinweis>
       <hinweis>Keine Rückfragen stellen.</hinweis>
       <hinweis>Überschreibe leere Felder direkt im XML.</hinweis>
-      <hinweis>Fülle Vorschau-Text <!--und HTML-Abschnitt--> vollständig aus.</hinweis>
+      <hinweis>Fülle den Vorschau-Text <!--und HTML-Abschnitt--> vollständig aus.</hinweis>
       <hinweis>Die Ausgabe erfolgt am Ende als reine Textdarstellung der redaktionellen Inhalte >1--sowie als vollständig aktualisierter XML-Block-->.</hinweis>
     </hinweise>
   </anweisung-fuer-ki>
@@ -186,7 +186,7 @@
   <quelle>
     <id>beitrag</id>
     <zeitstempel>${isoTime}</zeitstempel>
-    <slug-id>${slug}</slug-id>
+<!--<slug-id>${slug}</slug-id> -->
     <art>TV-Beitrag</art>
     <titel>${titel}</titel>
     <themenvorgabe>
@@ -233,7 +233,7 @@
   </editorial-metadata>
   <vorschau>
     <text>Finale redaktionelle Online-Ausgabe\n\nÜberschrift (max. 60 Zeichen):\n\nKurzbeschreibung (max. 150 Zeichen):\n\nSEO-Keywords (max. 10):\n\nSEO-Themen (max. 5):\n</text>
-<!--<html>
+<!-- <html>
       <div class="online-ausgabe-vorschau">
         <h2></h2>
         <p><strong>Kurzbeschreibung:</strong></p>
@@ -244,7 +244,7 @@
           <ul><li></li><li></li><li></li><li></li><li></li></ul>
         </div>
       </div>
-    </html>-->
+    </html> -->
   </vorschau>
 </online-ausgabe>`;
 
