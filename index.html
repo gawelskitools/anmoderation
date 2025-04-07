@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <title>Analyse-Tool mit Klartext- und HTML-Vorschau</title>
+  <title>Analyse-Tool mit Klartext-Vorschau</title>
   <style>
     body { font-family: Arial, sans-serif; max-width: 960px; margin: auto; padding: 20px; }
     textarea, select, input[type="text"] {
@@ -15,13 +15,10 @@
   </style>
 </head>
 <body>
-  <h1>Analyse-Tool – Vorschau als Text und HTML 005</h1>
+  <h1>Analyse-Tool – Vorschau als Text 001</h1>
 
   <label for="beitragstitel">Beitragstitel:</label>
   <input type="text" id="beitragstitel" placeholder="Beitragstitel eingeben" />
-
-<!--<label for="slugId">Slug-ID:</label>
-  <input type="text" id="slugId" placeholder="[slug-id wird nach Analyse ergänzt]" /> -->
 
   <label for="ressort">Ressort:</label>
   <select id="ressort">
@@ -104,7 +101,6 @@
     function generateFinalXML() {
       const isoTime = new Date().toISOString();
       const titel = escapeXml(document.getElementById("beitragstitel").value);
-      const slug = escapeXml(document.getElementById("slugId").value);
       const ressort = escapeXml(document.getElementById("ressort").value);
       const tags = escapeXml(document.getElementById("tags").value);
       const transcript = escapeXml(document.getElementById("transkript").value);
@@ -124,8 +120,8 @@
   <verarbeitung automatisch="true" />
   <ausgabe-format>nur-redaktionelle-inhalte</ausgabe-format>
   <anweisung-fuer-ki>
-    <beschreibung>
-      Verarbeite dieses XML sofort nach dem Einlesen. Lies alle &lt;originaltext&gt;-Felder, analysiere sie gemäß den &lt;aufgaben&gt;, fülle alle &lt;analyse&gt;-Felder sowie alle redaktionellen Felder in &lt;editorial-metadata&gt; automatisch aus. Erstelle zusätzlich eine strukturierte Vorschau in &lt;vorschau&gt;&lt;text&gt; <!--und &lt;vorschau&gt;&lt;html&gt;-->. Gib alle Ergebnisse vollständig aus, ohne Rückfragen, Kommentare oder Hinweise. Die Ausgabe erfolgt ausschließlich als redaktioneller Inhalt.
+     <beschreibung>
+      Verarbeite dieses XML sofort nach dem Einlesen. Lies alle &lt;originaltext&gt;-Felder, analysiere sie gemäß den &lt;aufgaben&gt;, fülle alle &lt;analyse&gt;-Felder sowie alle redaktionellen Felder in &lt;editorial-metadata&gt; automatisch aus. Erstelle zusätzlich eine strukturierte Vorschau in &lt;vorschau&gt;&lt;text&gt;. Gib alle Ergebnisse vollständig aus, ohne Rückfragen, Kommentare oder Hinweise. Die Ausgabe erfolgt ausschließlich als redaktioneller Inhalt.
     </beschreibung>
     <ausfuehrung>jetzt-analyse-starten</ausfuehrung>
     <aufgaben>
@@ -168,7 +164,6 @@
         <ziel>Vorschauausgabe</ziel>
         <formate>
           <format typ="text">Mit Zwischenüberschriften</format>
-  <!--    <format typ="html">Strukturierte Boxenvorschau</format> -->
         </formate>
       </aufgabe>
     </aufgaben>
@@ -178,15 +173,14 @@
       <hinweis>Verwende keine CDATA.</hinweis>
       <hinweis>Keine Rückfragen stellen.</hinweis>
       <hinweis>Überschreibe leere Felder direkt im XML.</hinweis>
-      <hinweis>Fülle den Vorschau-Text <!--und HTML-Abschnitt--> vollständig aus.</hinweis>
-      <hinweis>Die Ausgabe erfolgt am Ende als reine Textdarstellung der redaktionellen Inhalte >1--sowie als vollständig aktualisierter XML-Block-->.</hinweis>
+      <hinweis>Fülle den Vorschau-Text vollständig aus.</hinweis>
+      <hinweis>Die Ausgabe erfolgt am Ende als reine Textdarstellung der redaktionellen Inhalte sowie als vollständig aktualisierter XML-Block.</hinweis>
     </hinweise>
   </anweisung-fuer-ki>
 
   <quelle>
     <id>beitrag</id>
     <zeitstempel>${isoTime}</zeitstempel>
-<!--<slug-id>${slug}</slug-id> -->
     <art>TV-Beitrag</art>
     <titel>${titel}</titel>
     <themenvorgabe>
@@ -219,7 +213,7 @@
     </analysearten>
   </quelle>
 
-  <editorial-metadata>
+    <editorial-metadata>
     <ueberschrift länge-max="60"></ueberschrift>
     <kurzbeschreibung länge-max="150"></kurzbeschreibung>
     <seo>
@@ -232,19 +226,16 @@
     </seo>
   </editorial-metadata>
   <vorschau>
-    <text>Finale redaktionelle Online-Ausgabe\n\nÜberschrift (max. 60 Zeichen):\n\nKurzbeschreibung (max. 150 Zeichen):\n\nSEO-Keywords (max. 10):\n\nSEO-Themen (max. 5):\n</text>
-<!-- <html>
-      <div class="online-ausgabe-vorschau">
-        <h2></h2>
-        <p><strong>Kurzbeschreibung:</strong></p>
-        <div class="seo">
-          <h3>SEO-Keywords</h3>
-          <ul><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ul>
-          <h3>SEO-Themen</h3>
-          <ul><li></li><li></li><li></li><li></li><li></li></ul>
-        </div>
-      </div>
-    </html> -->
+    <text>Finale redaktionelle Online-Ausgabe
+
+Überschrift (max. 60 Zeichen):
+
+Kurzbeschreibung (max. 150 Zeichen):
+
+SEO-Keywords (max. 10):
+
+SEO-Themen (max. 5):
+</text>
   </vorschau>
 </online-ausgabe>`;
 
