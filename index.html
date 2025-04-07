@@ -20,8 +20,8 @@
   <label for="beitragstitel">Beitragstitel:</label>
   <input type="text" id="beitragstitel" placeholder="Beitragstitel eingeben" />
 
-  <label for="slugId">Slug-ID:</label>
-  <input type="text" id="slugId" placeholder="[slug-id wird nach Analyse ergänzt]" />
+<!--<label for="slugId">Slug-ID:</label>
+  <input type="text" id="slugId" placeholder="[slug-id wird nach Analyse ergänzt]" /> -->
 
   <label for="ressort">Ressort:</label>
   <select id="ressort">
@@ -165,10 +165,10 @@
         </elemente>
       </aufgabe>
       <aufgabe>
-        <ziel>Doppelte Vorschauausgabe</ziel>
+        <ziel>Vorschauausgabe</ziel>
         <formate>
           <format typ="text">Mit Zwischenüberschriften</format>
-          <format typ="html">Strukturierte Boxenvorschau</format>
+  <!--    <format typ="html">Strukturierte Boxenvorschau</format> -->
         </formate>
       </aufgabe>
     </aufgaben>
@@ -178,8 +178,8 @@
       <hinweis>Verwende keine CDATA.</hinweis>
       <hinweis>Keine Rückfragen stellen.</hinweis>
       <hinweis>Überschreibe leere Felder direkt im XML.</hinweis>
-      <hinweis>Fülle Vorschau-Text und HTML-Abschnitt vollständig aus.</hinweis>
-      <hinweis>Die Ausgabe erfolgt am Ende als reine Textdarstellung der redaktionellen Inhalte sowie als vollständig aktualisierter XML-Block.</hinweis>
+      <hinweis>Fülle Vorschau-Text <!--und HTML-Abschnitt--> vollständig aus.</hinweis>
+      <hinweis>Die Ausgabe erfolgt am Ende als reine Textdarstellung der redaktionellen Inhalte >1--sowie als vollständig aktualisierter XML-Block-->.</hinweis>
     </hinweise>
   </anweisung-fuer-ki>
 
@@ -233,7 +233,7 @@
   </editorial-metadata>
   <vorschau>
     <text>Finale redaktionelle Online-Ausgabe\n\nÜberschrift (max. 60 Zeichen):\n\nKurzbeschreibung (max. 150 Zeichen):\n\nSEO-Keywords (max. 10):\n\nSEO-Themen (max. 5):\n</text>
-    <html>
+<!--<html>
       <div class="online-ausgabe-vorschau">
         <h2></h2>
         <p><strong>Kurzbeschreibung:</strong></p>
@@ -244,7 +244,7 @@
           <ul><li></li><li></li><li></li><li></li><li></li></ul>
         </div>
       </div>
-    </html>
+    </html>-->
   </vorschau>
 </online-ausgabe>`;
 
