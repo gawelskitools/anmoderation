@@ -18,10 +18,10 @@
   <h1>Analyse-Tool – Vorschau als Text und HTML 007</h1>
 
   <label for="beitragstitel">Beitragstitel:</label>
-  <input type="text" id="beitragstitel" value="Beitragstitel eingeben" />
+  <input type="text" id="beitragstitel" value= placeholder="Beitragstitel eingeben" />
 
   <label for="slugId">Slug-ID:</label>
-  <input type="text" id="slugId" value="Bitte Video-ID eingeben" />
+  <input type="text" id="slugId leer="true">[slug-id wird nach Analyse ergänzt]</slug-id> />
 
   <label for="ressort">Ressort:</label>
   <select id="ressort">
@@ -44,7 +44,7 @@
   </select>
 
   <label for="tags">Tags:</label>
-  <input type="text" id="tags" value="Bitte wertvolle Tags kommagetrennt eingeben, die Gewichtung in der Analyse bekommen sollen" />
+  <input type="text" id="tags" value=placeholder="Bitte wertvolle Tags kommagetrennt eingeben, die Gewichtung in der Analyse bekommen sollen" />
 
   <div class="analyse-block">
     <h2>Transkript</h2>
@@ -118,43 +118,41 @@
       const klartextVorschau = `
 Finale redaktionelle Online-Ausgabe
 
-Überschrift (max. 60 Zeichen)
-Historisches Palais in Neustrelitz wird Hotel
+Überschrift (max. 60 Zeichen):
 
-Kurzbeschreibung (max. 150 Zeichen)
-Nach Jahren des Verfalls wird das Großherzogliche Palais in Neustrelitz privat saniert – denkmalgerecht, detailreich und bald als Hotel eröffnet.
+Kurzbeschreibung (max. 150 Zeichen):
 
-SEO-Keywords (max. 10)
-Neustrelitz, Großherzogliches Palais, Sanierung, Denkmal, Hotelumbau, Mecklenburg, historische Gebäude, Restaurierung, Kulturdenkmal, Handwerker
+SEO-Keywords (max. 10):
 
-SEO-Themen (max. 5)
-Denkmalschutz, Architektur, Regionalgeschichte, Tourismus, Hotelentwicklung`;
+SEO-Themen (max. 5):
+
+`;
 
     const htmlVorschau = `
 <div class="online-ausgabe-vorschau">
-  <h2>Historisches Palais in Neustrelitz wird Hotel</h2>
-  <p><strong>Kurzbeschreibung:</strong> Nach Jahren des Verfalls wird das Großherzogliche Palais in Neustrelitz privat saniert – denkmalgerecht, detailreich und bald als Hotel eröffnet.</p>
+  <h2></h2>
+  <p><strong>Kurzbeschreibung:</strong></p>
   <div class="seo">
     <h3>SEO-Keywords</h3>
     <ul>
-      <li>Neustrelitz</li>
-      <li>Großherzogliches Palais</li>
-      <li>Sanierung</li>
-      <li>Denkmal</li>
-      <li>Hotelumbau</li>
-      <li>Mecklenburg</li>
-      <li>historische Gebäude</li>
-      <li>Restaurierung</li>
-      <li>Kulturdenkmal</li>
-      <li>Handwerker</li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
     </ul>
     <h3>SEO-Themen</h3>
     <ul>
-      <li>Denkmalschutz</li>
-      <li>Architektur</li>
-      <li>Regionalgeschichte</li>
-      <li>Tourismus</li>
-      <li>Hotelentwicklung</li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li>g</li>
     </ul>
   </div>
 </div>`
@@ -162,8 +160,7 @@ Denkmalschutz, Architektur, Regionalgeschichte, Tourismus, Hotelentwicklung`;
       const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <online-ausgabe version="1.0">
   <anweisung-fuer-ki>
-    <beschreibung>Analysiere dieses Dokument vollständig und befülle alle leeren Felder gemäß der Aufgabenstellung.</beschreibung>
-    <beschreibung>Bitte führe alle Aufgaben vollständig und ohne Rückfragen aus.</beschreibung>
+    <beschreibung>Analysiere dieses Dokument vollständig und befülle alle leeren Felder gemäß der Aufgabenstellung und ohne Rückfragen aus.</beschreibung>
     <aufgaben>
       <aufgabe>
         <ziel>Analyse der Inhalte</ziel>
@@ -182,10 +179,22 @@ Denkmalschutz, Architektur, Regionalgeschichte, Tourismus, Hotelentwicklung`;
       <aufgabe>
         <ziel>Erstellung redaktioneller Online-Elemente</ziel>
         <elemente>
-          <ueberschrift max-laenge="60" />
-          <kurzbeschreibung max-laenge="150" />
-          <keywords max="10" />
-          <themen max="5" />
+          <ueberschrift> 
+            <max-laenge>60</laenge>
+            <stil>aktive Sprache, keine Füllwörter</stil>
+          </ueberschrift>
+          <kurzbeschreibung>
+            <max-laenge>150</laenge>
+            <stil>klarer Hauptsatz, Nebensätze möglichst vermeiden, Doppelpunkte sind erlaubt für Ausführungen oder Zusammenfassungen, Gedankenstriche sind erlaubt um um den Kontext zu erläutern oder um Informationen zu verdichten.</stil>
+          </kurzbeschreibung>
+          <keywords>
+            <max-anzahl>10</max-anzahl>
+            <stil>Haupt- und Nebenkeywords, thematisch breit, seo-relevant</stil>
+          </keywords/>
+          <themen>
+            <max-anzahl>5</max-anzahl>
+            <stil>übergeordnete thematische Kategorien, seo-relevant</stil>
+          </themen>
         </elemente>
       </aufgabe>
       <aufgabe>
