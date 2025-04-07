@@ -121,8 +121,12 @@
 
       const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <online-ausgabe version="1.0">
+  <verarbeitung automatisch="true" />
+  <ausgabe-format>nur-redaktionelle-inhalte</ausgabe-format>
   <anweisung-fuer-ki>
-    <beschreibung>Verarbeite dieses XML sofort. Lies alle <originaltext>-Felder, analysiere sie gemäß den <aufgaben>, fülle alle <analyse>-Felder sowie alle redaktionellen Felder in <editorial-metadata> automatisch aus. Erstelle zusätzlich strukturierte Vorschauen in <vorschau><text> und <vorschau><html>. Gib alle Ergebnisse vollständig aus, ohne Rückfragen.</beschreibung>
+    <beschreibung>
+      Verarbeite dieses XML sofort nach dem Einlesen. Lies alle &lt;originaltext&gt;-Felder, analysiere sie gemäß den &lt;aufgaben&gt;, fülle alle &lt;analyse&gt;-Felder sowie alle redaktionellen Felder in &lt;editorial-metadata&gt; automatisch aus. Erstelle zusätzlich strukturierte Vorschauen in &lt;vorschau&gt;&lt;text&gt; und &lt;vorschau&gt;&lt;html&gt;. Gib alle Ergebnisse vollständig aus, ohne Rückfragen, Kommentare oder Hinweise. Die Ausgabe erfolgt ausschließlich als redaktioneller Inhalt.
+    </beschreibung>
     <ausfuehrung>jetzt-analyse-starten</ausfuehrung>
     <aufgaben>
       <aufgabe>
@@ -170,11 +174,12 @@
     </aufgaben>
     <hinweise>
       <hinweis>Starte die Verarbeitung sofort und vollständig.</hinweis>
-      <hinweis>Gib vollständige Inhalte in allen Ausgabefeldern zurück.</hinweis>
+      <hinweis>Gib ausschließlich redaktionelle Inhalte in der Ausgabe zurück – keine Erläuterungen oder Kommentare.</hinweis>
       <hinweis>Verwende keine CDATA.</hinweis>
       <hinweis>Keine Rückfragen stellen.</hinweis>
       <hinweis>Überschreibe leere Felder direkt im XML.</hinweis>
       <hinweis>Fülle Vorschau-Text und HTML-Abschnitt vollständig aus.</hinweis>
+      <hinweis>Die Ausgabe erfolgt am Ende als reine Textdarstellung der redaktionellen Inhalte sowie als vollständig aktualisierter XML-Block.</hinweis>
     </hinweise>
   </anweisung-fuer-ki>
 
