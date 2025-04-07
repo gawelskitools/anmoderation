@@ -15,7 +15,7 @@
   </style>
 </head>
 <body>
-  <h1>Analyse-Tool – Vorschau als Text und HTML</h1>
+  <h1>Analyse-Tool – Vorschau als Text und HTML 002</h1>
 
   <label for="beitragstitel">Beitragstitel:</label>
   <input type="text" id="beitragstitel" placeholder="Beitragstitel eingeben" />
@@ -122,7 +122,8 @@
       const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <online-ausgabe version="1.0">
   <anweisung-fuer-ki>
-    <beschreibung>Analysiere dieses Dokument vollständig und befülle alle leeren Felder gemäß der Aufgabenstellung und ohne Rückfragen aus.</beschreibung>
+    <beschreibung>Verarbeite dieses XML sofort. Lies alle <originaltext>-Felder, analysiere sie gemäß den <aufgaben>, fülle alle <analyse>-Felder sowie alle redaktionellen Felder in <editorial-metadata> automatisch aus. Erstelle zusätzlich strukturierte Vorschauen in <vorschau><text> und <vorschau><html>. Gib alle Ergebnisse vollständig aus, ohne Rückfragen.</beschreibung>
+    <ausfuehrung>jetzt-analyse-starten</ausfuehrung>
     <aufgaben>
       <aufgabe>
         <ziel>Analyse der Inhalte</ziel>
@@ -168,9 +169,12 @@
       </aufgabe>
     </aufgaben>
     <hinweise>
-      <hinweis>Keine Rückfrage stellen</hinweis>
-      <hinweis>Keine CDATA verwenden</hinweis>
-      <hinweis>Ergebnisse direkt ins XML schreiben</hinweis>
+      <hinweis>Starte die Verarbeitung sofort und vollständig.</hinweis>
+      <hinweis>Gib vollständige Inhalte in allen Ausgabefeldern zurück.</hinweis>
+      <hinweis>Verwende keine CDATA.</hinweis>
+      <hinweis>Keine Rückfragen stellen.</hinweis>
+      <hinweis>Überschreibe leere Felder direkt im XML.</hinweis>
+      <hinweis>Fülle Vorschau-Text und HTML-Abschnitt vollständig aus.</hinweis>
     </hinweise>
   </anweisung-fuer-ki>
 
