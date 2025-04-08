@@ -13,14 +13,10 @@
     .button-group { margin-top: 10px; display: flex; gap: 10px; flex-wrap: wrap; }
     h2 { margin-top: 40px; }
     .xml-box { background: #f8f8f8; border: 1px solid #ccc; padding: 15px; white-space: pre-wrap; margin-top: 15px; font-family: monospace; }
-    .top-tag-input input { color: red; font-weight: bold; }
-    .warn-tag-button { background-color: #eee; border: 1px solid #ccc; padding: 6px 10px; margin: 5px 5px 0 0; cursor: pointer; border-radius: 4px; }
-    .warn-tag-button.active { background-color: #4CAF50; color: white; }
-    .tooltip { border-bottom: 1px dotted black; cursor: help; }
   </style>
 </head>
 <body>
-  <h1>Analyse-Tool – XML mit PromptChain</h1>
+  <h1>Analyse-Tool – XML mit PromptChain_v1</h1>
 
   <label for="beitragstitel">Beitragstitel:</label>
   <input type="text" id="beitragstitel" placeholder="Beitragstitel eingeben" />
@@ -45,27 +41,8 @@
     <option>Ausland</option>
   </select>
 
-  <label>Top-Tags <span class="tooltip" title="Max. 5 priorisierte Begriffe, die den thematischen Fokus der Analyse verstärken">[?]</span></label>
-  <div id="topTags" class="top-tag-input"></div>
-  <button onclick="addTopTag()">+ Top-Tag hinzufügen</button>
-
-  <label>Warn-Tags <span class="tooltip" title="Wähle markierte Themen, die sensible Inhalte kennzeichnen">[?]</span></label><br>
-  <div id="warnTags">
-    <span class="warn-tag-button" onclick="toggleWarnTag(this, 'Mutmaßung')">Mutmaßung</span>
-    <span class="warn-tag-button" onclick="toggleWarnTag(this, 'Vorverurteilung')">Vorverurteilung</span>
-    <span class="warn-tag-button" onclick="toggleWarnTag(this, 'Falschmeldung')">Falschmeldung</span>
-    <span class="warn-tag-button" onclick="toggleWarnTag(this, 'Identitätsschutz')">Identitätsschutz</span>
-    <span class="warn-tag-button" onclick="toggleWarnTag(this, 'rechtlich sensibel')">rechtlich sensibel</span>
-  </div>
-
-  <label>Thema <span class="tooltip" title="Kontextuelles Thema für die Einordnung">[?]</span></label>
-  <input type="text" id="kontextThema" />
-
-  <label>Ort <span class="tooltip" title="Region oder Stadt für die Einordnung">[?]</span></label>
-  <input type="text" id="kontextOrt" />
-
-  <label>Ereignis <span class="tooltip" title="Art des Ereignisses, z. B. Brand, Urteil">[?]</span></label>
-  <input type="text" id="kontextEreignis" />
+  <label for="tags">Tags:</label>
+  <input type="text" id="tags" placeholder="Kommagetrennte Tags eingeben" />
 
   <div class="analyse-block">
     <h2>Transkript</h2>
@@ -115,32 +92,11 @@
   <div id="finalXml" class="xml-box"></div>
 
   <script>
-    let topTagCount = 0;
-    function addTopTag() {
-      if (topTagCount >= 5) return;
-      const input = document.createElement("input");
-      input.setAttribute("type", "text");
-      input.setAttribute("placeholder", "Top-Tag eingeben...");
-      document.getElementById("topTags").appendChild(input);
-      topTagCount++;
-    }
-
-    const selectedWarnTags = new Set();
-    function toggleWarnTag(el, tag) {
-      if (selectedWarnTags.has(tag)) {
-        selectedWarnTags.delete(tag);
-        el.classList.remove("active");
-      } else {
-        selectedWarnTags.add(tag);
-        el.classList.add("active");
-      }
-    }
-
     function escapeXml(str) {
       return str.replace(/&/g, "&amp;")
                 .replace(/</g, "&lt;")
                 .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
+                .replace(/\"/g, "&quot;")
                 .replace(/'/g, "&apos;");
     }
 
@@ -148,12 +104,7 @@
       const isoTime = new Date().toISOString();
       const titel = escapeXml(document.getElementById("beitragstitel").value);
       const ressort = escapeXml(document.getElementById("ressort").value);
-      const topTags = Array.from(document.getElementById("topTags").querySelectorAll("input")).map(input => escapeXml(input.value)).filter(Boolean);
-      const kontextThema = escapeXml(document.getElementById("kontextThema").value);
-      const kontextOrt = escapeXml(document.getElementById("kontextOrt").value);
-      const kontextEreignis = escapeXml(document.getElementById("kontextEreignis").value);
-      const warnTags = Array.from(selectedWarnTags).map(tag => `    <tag typ=\"warnung\">${escapeXml(tag)}</tag>`).join("\n");
-
+      const tags = escapeXml(document.getElementById("tags").value);
       const transcript = escapeXml(document.getElementById("transkript").value);
       const zitatT = document.getElementById("zitateTranskript").value;
       const weightT = document.getElementById("weightTranskript").value;
@@ -164,21 +115,45 @@
       const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <online-ausgabe version="1.0">
   <verarbeitung automatisch="true" />
-  <top-tags>
-${topTags.map(tag => `    <tag priorität=\"hoch\">${tag}</tag>`).join("\n")}
-  </top-tags>
-  <warn-tags>
-${warnTags}
-  </warn-tags>
-  <kontext-tags>
-    <tag typ="thema" nutzung="kontext">${kontextThema}</tag>
-    <tag typ="ort" nutzung="kontext">${kontextOrt}</tag>
-    <tag typ="ereignis" nutzung="kontext">${kontextEreignis}</tag>
-  </kontext-tags>
+  <verarbeitungskette>
+    <schritt nummer="1" typ="analyse">Transkript und Anmoderation analysieren</schritt>
+    <schritt nummer="2" typ="struktur">Analysefelder (2–6) befüllen</schritt>
+    <schritt nummer="3" typ="redaktion">Online-Elemente erzeugen</schritt>
+    <schritt nummer="4" typ="vorschau">Klartextausgabe erzeugen</schritt>
+  </verarbeitungskette>
+  <anweisung-fuer-ki>
+    <beschreibung>Führe alle Verarbeitungsschritte nacheinander aus und fülle die XML-Struktur vollständig mit redaktionellen Ergebnissen. Keine Rückfragen. Keine Kommentare. Keine CDATA. Direkte Ausgabe.</beschreibung>
+    <ablauf>
+      <schritt>1. Inhalte analysieren</schritt>
+      <schritt>2. Strukturierte Auswertung</schritt>
+      <schritt>3. Redaktionelle Textbausteine erzeugen</schritt>
+      <schritt>4. Ausgabe erzeugen</schritt>
+    </ablauf>
+    <abschluss>
+Gib das Ergebnis ausschließlich im folgenden Format als Klartext aus:
+
+Finale redaktionelle Online-Ausgabe
+
+Überschrift (max. 60 Zeichen):
+"Überschrift wird von der Ki eingesetzt"
+
+Kurzbeschreibung (max. 150 Zeichen):
+"Kurzbeschreibung wird von der Ki eingesetzt"
+
+SEO-Keywords (max. 10):
+Keyword1, Keyword2, Keyword3, Keyword4, Keyword5, Keyword6, Keyword7, Keyword8, Keyword9, Keyword10 (alle durch die KI eingesetzt)
+
+SEO-Themen (max. 5):
+Thema1, Thema2, Thema3, Thema4, Thema5 (alle durch die KI eingesetzt)
+
+Keine Rückfragen. Keine HTML-Ausgabe. Keine XML-Ausgabe. Nur diese Klartextstruktur.
+    </abschluss>
+  </anweisung-fuer-ki>
   <quelle>
     <zeitstempel>${isoTime}</zeitstempel>
     <titel>${titel}</titel>
     <ressort>${ressort}</ressort>
+    <tags>${tags}</tags>
     <analysearten>
       <transkript gewichtung="${weightT}">
         <zitate-erlaubt>${zitatT}</zitate-erlaubt>
