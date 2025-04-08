@@ -106,7 +106,7 @@
 
 </head>
 <body>
-  <h1>Analyse-Tool – XML mit PromptChain & strukturierten Tags</h1>
+  <h1>Analyse-Tool – XML mit PromptChain & strukturierten Tags_v2</h1>
 
   <label for="beitragstitel">Beitragstitel:</label>
   <input type="text" id="beitragstitel" placeholder="Beitragstitel eingeben" />
@@ -225,13 +225,21 @@
     <schritt nummer="4" typ="vorschau">Klartextausgabe erzeugen</schritt>
   </verarbeitungskette>
   <anweisung-fuer-ki>
-    <beschreibung>Führe alle Verarbeitungsschritte nacheinander aus. Nutze &lt;tags&gt; für Priorisierung, Kontextualisierung und Warnhinweise. Keine Rückfragen. Keine Kommentare. Keine CDATA.</beschreibung>
+    <beschreibung>Führe alle Verarbeitungsschritte nacheinander aus und und fülle die XML-Struktur vollständig mit redaktionellen Ergebnissen. Nutze &lt;tags&gt; für Priorisierung, Kontextualisierung und Warnhinweise. Keine Rückfragen. Keine Kommentare. Keine CDATA.Direkte Ausgabe.</beschreibung>
     <hinweise>
       <hinweis>Nutze &lt;top-tags&gt; zur redaktionellen Schwerpunktsetzung.</hinweis>
       <hinweis>Berücksichtige &lt;warn-tags&gt; zur sprachlichen Vorsicht bei sensiblen Inhalten.</hinweis>
       <hinweis>Verwende &lt;kontext-tags&gt;, um Themen, Orte und Ereignisse einzuordnen. Diese dürfen als SEO-Keywords genutzt werden, wenn inhaltlich sinnvoll.</hinweis>
     </hinweise>
+	<ablauf>
+      <schritt>1. Inhalte analysieren</schritt>
+      <schritt>2. Strukturierte Auswertung</schritt>
+      <schritt>3. Redaktionelle Textbausteine erzeugen</schritt>
+      <schritt>4. Ausgabe erzeugen</schritt>
+    </ablauf>
     <abschluss>
+Gib das Ergebnis ausschließlich im folgenden Format als Klartext aus:
+
 Finale redaktionelle Online-Ausgabe
 
 Überschrift (max. 60 Zeichen):
