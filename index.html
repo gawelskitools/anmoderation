@@ -2,21 +2,111 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <title>Analyse-Tool mit KI-PromptChain</title>
+  <title>Analyse-Tool mit KI-PromptChain & Tags</title>
   <style>
-    body { font-family: Arial, sans-serif; max-width: 960px; margin: auto; padding: 20px; }
-    textarea, select, input[type="text"] {
-      width: 100%; margin-top: 5px; padding: 6px; font-family: monospace;
-    }
-    textarea { height: 180px; }
-    .analyse-block { margin-bottom: 30px; border-top: 1px solid #ccc; padding-top: 20px; }
-    .button-group { margin-top: 10px; display: flex; gap: 10px; flex-wrap: wrap; }
-    h2 { margin-top: 40px; }
-    .xml-box { background: #f8f8f8; border: 1px solid #ccc; padding: 15px; white-space: pre-wrap; margin-top: 15px; font-family: monospace; }
-  </style>
+  body {
+    font-family: Arial, sans-serif;
+    max-width: 960px;
+    margin: auto;
+    padding: 20px;
+  }
+
+  label {
+    display: block;
+    margin-top: 20px;
+    font-weight: bold;
+  }
+
+  textarea,
+  select,
+  input[type="text"] {
+    width: 100%;
+    margin-top: 6px;
+    padding: 8px;
+    font-family: monospace;
+    box-sizing: border-box;
+  }
+
+  textarea {
+    height: 180px;
+  }
+
+  .analyse-block {
+    margin-top: 30px;
+    margin-bottom: 30px;
+    border-top: 1px solid #ccc;
+    padding-top: 20px;
+  }
+
+  .form-section {
+    background-color: #f0f0f0;
+    padding: 15px;
+    border-radius: 6px;
+    margin-top: 25px;
+  }
+
+  .tag-group {
+    margin-bottom: 15px;
+  }
+
+  .tag-group label {
+    margin-top: 10px;
+    font-weight: bold;
+    display: block;
+  }
+
+  .highlight {
+    color: red;
+    font-weight: bold;
+  }
+
+  .tag-button {
+    background: #eee;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin: 4px 6px 4px 0;
+    padding: 4px 10px;
+    cursor: pointer;
+    display: inline-block;
+  }
+
+  .tag-button.active {
+    background: #8f8;
+    border-color: #484;
+    font-weight: bold;
+  }
+
+  .info-icon {
+    font-size: 0.9em;
+    margin-left: 6px;
+    cursor: help;
+    color: #666;
+  }
+
+  .button-group {
+    margin-top: 25px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  h2 {
+    margin-top: 40px;
+  }
+
+  .xml-box {
+    background: #f8f8f8;
+    border: 1px solid #ccc;
+    padding: 15px;
+    white-space: pre-wrap;
+    margin-top: 20px;
+    font-family: monospace;
+  }
+</style>
+
 </head>
 <body>
-  <h1>Analyse-Tool – XML mit PromptChain_v1</h1>
+  <h1>Analyse-Tool – XML mit PromptChain & strukturierten Tags</h1>
 
   <label for="beitragstitel">Beitragstitel:</label>
   <input type="text" id="beitragstitel" placeholder="Beitragstitel eingeben" />
@@ -24,25 +114,33 @@
   <label for="ressort">Ressort:</label>
   <select id="ressort">
     <option value="">– Bitte wählen –</option>
-    <option>Politik</option>
-    <option>Wirtschaft</option>
-    <option>Kultur</option>
-    <option>Sport</option>
-    <option>Wissen</option>
-    <option>Gesellschaft</option>
-    <option>Panorama</option>
-    <option>Digitales</option>
-    <option>Verbraucher</option>
-    <option>Gesundheit</option>
-    <option>Bildung</option>
-    <option>Umwelt</option>
-    <option>Verkehr</option>
-    <option>Justiz</option>
-    <option>Ausland</option>
+    <option>Politik</option><option>Wirtschaft</option><option>Kultur</option>
+    <option>Sport</option><option>Wissen</option><option>Gesellschaft</option>
+    <option>Panorama</option><option>Digitales</option><option>Verbraucher</option>
+    <option>Gesundheit</option><option>Bildung</option><option>Umwelt</option>
+    <option>Verkehr</option><option>Justiz</option><option>Ausland</option>
   </select>
 
-  <label for="tags">Tags:</label>
-  <input type="text" id="tags" placeholder="Kommagetrennte Tags eingeben" />
+  <label class="highlight" for="topTags" title="Max. 5 priorisierte Begriffe, die die KI inhaltlich hervorheben soll.">Top-Tags (max. 5):</label>
+  <input type="text" id="topTags" placeholder="Kommagetrennte Top-Tags eingeben..." />
+
+  <label class="highlight" title="Warnhinweise, die eine sensible Sprache auslösen.">Warn-Tags (mehrere wählbar):</label>
+  <div id="warnTags">
+    <span class="tag-button" onclick="toggleWarnTag(this)">Mutmaßung</span>
+    <span class="tag-button" onclick="toggleWarnTag(this)">Vorverurteilung</span>
+    <span class="tag-button" onclick="toggleWarnTag(this)">Falschmeldung</span>
+    <span class="tag-button" onclick="toggleWarnTag(this)">Identitätsschutz</span>
+    <span class="tag-button" onclick="toggleWarnTag(this)">rechtlich sensibel</span>
+  </div>
+
+  <label class="highlight" for="themaTag" title="Zentrales Thema zur Kontextualisierung.">Kontext: Thema</label>
+  <input type="text" id="themaTag" placeholder="Kontextthema eingeben..." />
+
+  <label class="highlight" for="ortTag" title="Ort des Ereignisses.">Kontext: Ort</label>
+  <input type="text" id="ortTag" placeholder="Ort eingeben..." />
+
+  <label class="highlight" for="ereignisTag" title="Art des Ereignisses (z.B. Unfall, Urteil, Abstimmung)">Kontext: Ereignis</label>
+  <input type="text" id="ereignisTag" placeholder="Ereignis eingeben..." />
 
   <div class="analyse-block">
     <h2>Transkript</h2>
@@ -93,18 +191,23 @@
 
   <script>
     function escapeXml(str) {
-      return str.replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/\"/g, "&quot;")
-                .replace(/'/g, "&apos;");
+      return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+                .replace(/\"/g, "&quot;").replace(/'/g, "&apos;");
+    }
+
+    function toggleWarnTag(elem) {
+      elem.classList.toggle("active");
     }
 
     function generateFinalXML() {
       const isoTime = new Date().toISOString();
       const titel = escapeXml(document.getElementById("beitragstitel").value);
       const ressort = escapeXml(document.getElementById("ressort").value);
-      const tags = escapeXml(document.getElementById("tags").value);
+      const topTags = escapeXml(document.getElementById("topTags").value);
+      const thema = escapeXml(document.getElementById("themaTag").value);
+      const ort = escapeXml(document.getElementById("ortTag").value);
+      const ereignis = escapeXml(document.getElementById("ereignisTag").value);
+      const warnTags = [...document.querySelectorAll(".tag-button.active")].map(btn => `<tag>${escapeXml(btn.textContent)}</tag>`).join("\n");
       const transcript = escapeXml(document.getElementById("transkript").value);
       const zitatT = document.getElementById("zitateTranskript").value;
       const weightT = document.getElementById("weightTranskript").value;
@@ -122,16 +225,13 @@
     <schritt nummer="4" typ="vorschau">Klartextausgabe erzeugen</schritt>
   </verarbeitungskette>
   <anweisung-fuer-ki>
-    <beschreibung>Führe alle Verarbeitungsschritte nacheinander aus und fülle die XML-Struktur vollständig mit redaktionellen Ergebnissen. Keine Rückfragen. Keine Kommentare. Keine CDATA. Direkte Ausgabe.</beschreibung>
-    <ablauf>
-      <schritt>1. Inhalte analysieren</schritt>
-      <schritt>2. Strukturierte Auswertung</schritt>
-      <schritt>3. Redaktionelle Textbausteine erzeugen</schritt>
-      <schritt>4. Ausgabe erzeugen</schritt>
-    </ablauf>
+    <beschreibung>Führe alle Verarbeitungsschritte nacheinander aus. Nutze &lt;tags&gt; für Priorisierung, Kontextualisierung und Warnhinweise. Keine Rückfragen. Keine Kommentare. Keine CDATA.</beschreibung>
+    <hinweise>
+      <hinweis>Nutze &lt;top-tags&gt; zur redaktionellen Schwerpunktsetzung.</hinweis>
+      <hinweis>Berücksichtige &lt;warn-tags&gt; zur sprachlichen Vorsicht bei sensiblen Inhalten.</hinweis>
+      <hinweis>Verwende &lt;kontext-tags&gt;, um Themen, Orte und Ereignisse einzuordnen. Diese dürfen als SEO-Keywords genutzt werden, wenn inhaltlich sinnvoll.</hinweis>
+    </hinweise>
     <abschluss>
-Gib das Ergebnis ausschließlich im folgenden Format als Klartext aus:
-
 Finale redaktionelle Online-Ausgabe
 
 Überschrift (max. 60 Zeichen):
@@ -141,19 +241,31 @@ Kurzbeschreibung (max. 150 Zeichen):
 "Kurzbeschreibung wird von der Ki eingesetzt"
 
 SEO-Keywords (max. 10):
-Keyword1, Keyword2, Keyword3, Keyword4, Keyword5, Keyword6, Keyword7, Keyword8, Keyword9, Keyword10 (alle durch die KI eingesetzt)
+Keyword1, Keyword2, ...
 
 SEO-Themen (max. 5):
-Thema1, Thema2, Thema3, Thema4, Thema5 (alle durch die KI eingesetzt)
+Thema1, Thema2, ...
 
-Keine Rückfragen. Keine HTML-Ausgabe. Keine XML-Ausgabe. Nur diese Klartextstruktur.
+Keine Rückfragen. Nur diese Klartextstruktur.
     </abschluss>
   </anweisung-fuer-ki>
   <quelle>
     <zeitstempel>${isoTime}</zeitstempel>
     <titel>${titel}</titel>
     <ressort>${ressort}</ressort>
-    <tags>${tags}</tags>
+    <tags>
+      <top-tags prioritaet="hoch">
+        ${topTags.split(',').map(tag => `<tag>${tag.trim()}</tag>`).join("\n")}
+      </top-tags>
+      <warn-tags bedeutung="inhaltlich kritisch">
+        ${warnTags}
+      </warn-tags>
+      <kontext-tags>
+        <thema>${thema}</thema>
+        <ort>${ort}</ort>
+        <ereignis>${ereignis}</ereignis>
+      </kontext-tags>
+    </tags>
     <analysearten>
       <transkript gewichtung="${weightT}">
         <zitate-erlaubt>${zitatT}</zitate-erlaubt>
