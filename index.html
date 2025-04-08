@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <title>Analyse-Tool mit KI-PromptChain</title>
+  <title>Analyse-Tool mit KI-PromptChain002</title>
   <style>
     body { font-family: Arial, sans-serif; max-width: 960px; margin: auto; padding: 20px; }
     textarea, select, input[type="text"] {
@@ -12,11 +12,11 @@
     .analyse-block { margin-bottom: 30px; border-top: 1px solid #ccc; padding-top: 20px; }
     .button-group { margin-top: 10px; display: flex; gap: 10px; flex-wrap: wrap; }
     h2 { margin-top: 40px; }
-    .xml-box, .html-preview { background: #f8f8f8; border: 1px solid #ccc; padding: 15px; white-space: pre-wrap; margin-top: 15px; font-family: monospace; }
+    .xml-box { background: #f8f8f8; border: 1px solid #ccc; padding: 15px; white-space: pre-wrap; margin-top: 15px; font-family: monospace; }
   </style>
 </head>
 <body>
-  <h1>Analyse-Tool – XML mit PromptChain & Vorschau</h1>
+  <h1>Analyse-Tool – XML mit PromptChain</h1>
 
   <label for="beitragstitel">Beitragstitel:</label>
   <input type="text" id="beitragstitel" placeholder="Beitragstitel eingeben" />
@@ -91,14 +91,6 @@
   <h2>XML zum Kopieren</h2>
   <div id="finalXml" class="xml-box"></div>
 
-  <h2>Klartext-Vorschau (für Redaktion)</h2>
-  <div class="html-preview">
-    <strong>Überschrift:</strong> <em>[Wird von KI erzeugt]</em><br>
-    <strong>Kurzbeschreibung:</strong> <em>[Wird von KI erzeugt]</em><br>
-    <strong>Keywords:</strong> <ul><li>…</li></ul>
-    <strong>Themen:</strong> <ul><li>…</li></ul>
-  </div>
-
   <script>
     function escapeXml(str) {
       return str.replace(/&/g, "&amp;")
@@ -127,7 +119,7 @@
     <schritt nummer="1" typ="analyse">Transkript und Anmoderation analysieren</schritt>
     <schritt nummer="2" typ="struktur">Analysefelder (2–6) befüllen</schritt>
     <schritt nummer="3" typ="redaktion">Online-Elemente erzeugen</schritt>
-    <schritt nummer="4" typ="vorschau">Klartext- und HTML-Vorschau erstellen</schritt>
+    <schritt nummer="4" typ="vorschau">Klartextausgabe erzeugen</schritt>
   </verarbeitungskette>
   <anweisung-fuer-ki>
     <beschreibung>Führe alle Verarbeitungsschritte nacheinander aus und fülle die XML-Struktur vollständig mit redaktionellen Ergebnissen. Keine Rückfragen. Keine Kommentare. Keine CDATA. Direkte Ausgabe.</beschreibung>
@@ -135,9 +127,27 @@
       <schritt>1. Inhalte analysieren</schritt>
       <schritt>2. Strukturierte Auswertung</schritt>
       <schritt>3. Redaktionelle Textbausteine erzeugen</schritt>
-      <schritt>4. Vorschau generieren (Text & HTML)</schritt>
+      <schritt>4. Ausgabe erzeugen</schritt>
     </ablauf>
-    <abschluss>Ausgabe in allen Formaten: Klartext, HTML-Vorschau, XML-Struktur.</abschluss>
+    <abschluss>
+Gib das Ergebnis ausschließlich im folgenden Format als Klartext aus:
+
+Finale redaktionelle Online-Ausgabe
+
+Überschrift (max. 60 Zeichen):
+"Überschrift wird von der Ki eingesetzt"
+
+Kurzbeschreibung (max. 150 Zeichen):
+"Kurzbeschreibung wird von der Ki eingesetzt"
+
+SEO-Keywords (max. 10):
+Keyword1, Keyword2, Keyword3, Keyword4, Keyword5, Keyword6, Keyword7, Keyword8, Keyword9, Keyword10 (alle durch die KI eingesetzt)
+
+SEO-Themen (max. 5):
+Thema1, Thema2, Thema3, Thema4, Thema5 (alle durch die KI eingesetzt)
+
+Keine Rückfragen. Keine HTML-Ausgabe. Keine XML-Ausgabe. Nur diese Klartextstruktur.
+    </abschluss>
   </anweisung-fuer-ki>
   <quelle>
     <zeitstempel>${isoTime}</zeitstempel>
@@ -181,23 +191,6 @@
       </themen>
     </seo>
   </editorial-metadata>
-  <vorschau>
-    <text>
-      === Redaktionelle Vorschau ===
-      ÜBERSCHRIFT:
-      KURZTEXT:
-      KEYWORDS:
-      THEMEN:
-    </text>
-    <html>
-      <box>
-        <h2>[Überschrift]</h2>
-        <p>[Kurzbeschreibung]</p>
-        <ul class="keywords"><li>...</li></ul>
-        <ul class="themen"><li>...</li></ul>
-      </box>
-    </html>
-  </vorschau>
 </online-ausgabe>`;
 
       document.getElementById("finalXml").textContent = xml;
